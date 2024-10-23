@@ -23,23 +23,16 @@ import { Progress } from '@/components/ui/progress';
 
 interface QuestionnaireProps {
   onSubmit: (data: QuestionnaireResponse) => void;
+  questions: Question[];
 }
 
-export function Questionnaire({ onSubmit }: QuestionnaireProps) {
+export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<Record<string, any>>({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const form = useForm<QuestionnaireResponse>();
-
-  useEffect(() => {
-    // In a real app, this would be an API call
-    const mockQuestions = JSON.parse('{"questions": ' + JSON.stringify(questionnaire.questions) + '}');
-    setQuestions(mockQuestions.questions.sort((a: Question, b: Question) => a.order - b.order));
-    setLoading(false);
-  }, []);
 
   useEffect(() => {
     if (questions.length > 0) {
@@ -277,12 +270,3 @@ export function Questionnaire({ onSubmit }: QuestionnaireProps) {
     </Card>
   );
 }
-
-// This would normally be fetched from an API
-const questionnaire = {
-  "id": "9a12e826-dc28-4c44-b7a3-091521fa9b7a",
-  "name": "Sildenafil",
-  "description": "Male enhancement for erectile dysfunction",
-  "questionnaireId": "67838f80-c400-4740-a273-60a2405dbf30",
-  "questions": [/* Your questionnaire JSON here */]
-};

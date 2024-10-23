@@ -4,6 +4,7 @@ export interface Product {
   price: number;
   description: string;
   image: string;
+  questions: Question[];
 }
 
 export interface CustomerDetails {
