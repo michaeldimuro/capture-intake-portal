@@ -28,8 +28,8 @@ export function CheckoutStepper({
             <div
               key={step.title}
               className={cn(
-                'flex flex-col items-center relative',
-                index !== steps.length - 1 && 'flex-1'
+                'flex flex-col items-center relative flex-1',
+                // index !== steps.length - 1 && 'flex-1'
               )}
             >
               {/* Progress Line */}
