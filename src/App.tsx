@@ -9,6 +9,7 @@ import { Questionnaire } from "@/components/checkout/Questionnaire";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Product, Question } from "./lib/types";
+import mockProduct from '../mockProduct.json'
 
 const steps = [
   {
@@ -48,9 +49,12 @@ function App() {
   const productId = "9a12e826-dc28-4c44-b7a3-091521fa9b7a";
 
   const fetchProduct = async (productId: string) => {
-    const p = await fetch(
-      `http://localhost:3030/dev/company/product-details/${productId}`
-    ).then((res) => res.json());
+    // const p = await fetch(
+    //   `http://localhost:3030/dev/company/product-details/${productId}`
+    // ).then((res) => res.json());
+
+    const p = mockProduct as any;
+
     setProduct({
       ...p,
       image:

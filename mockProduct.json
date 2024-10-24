@@ -1,0 +1,1662 @@
+{
+    "id": "9a12e826-dc28-4c44-b7a3-091521fa9b7a",
+    "name": "Sildenafil",
+    "description": "Male enhancement for erectile dysfunction",
+    "questionnaireId": "67838f80-c400-4740-a273-60a2405dbf30",
+    "dosages": [
+        {
+            "dosageId": "a588daa1-7f66-4675-954e-7d4b521e62c7",
+            "strength": "20mg",
+            "form": "tablet"
+        }
+    ],
+    "questions": [
+        {
+            "partnerQuestionnaireQuestionId": "5c8a36b7-925f-4bf5-884f-f508a9a76d96",
+            "title": "We want to make sure you're in the right place.  Are you having difficulty achieving or maintaining an erection?",
+            "description": null,
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 1,
+            "type": "singleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "3113867c-e452-4b78-8df3-b53895cb3394",
+                    "title": "Yes",
+                    "option": "Yes",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 1,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "3c2372e6-7f8f-4ed3-a64a-fc4208e42bc6",
+                    "title": "No",
+                    "option": "No",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": []
+        },
+        {
+            "partnerQuestionnaireQuestionId": "bd9ee74b-15e2-4f4d-b848-390e40a64235",
+            "title": "We're sorry, it looks like you're not in the correct place!",
+            "description": "<div>Perhaps you made a wrong choice?&nbsp; Use the back button if you'd like to change your answer.</div>",
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 3,
+            "type": "string",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [],
+            "attachments": [],
+            "rules": [
+                {
+                    "id": "53924149-4cd5-486a-a5a9-d5b0bda8090b",
+                    "title": "Rule - We're sorry, it looks like you're not in the correct place!",
+                    "type": "and",
+                    "requirements": [
+                        {
+                            "basedOn": "question",
+                            "requiredQuestionId": "5c8a36b7-925f-4bf5-884f-f508a9a76d96",
+                            "requiredQuestionTitle": "We want to make sure you're in the right place.  Are you having difficulty achieving or maintaining an erection?",
+                            "conditionalAnswer": null,
+                            "requiredAnswer": "No"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partnerQuestionnaireQuestionId": "c0cbcbd9-bcd1-4905-8180-fe3b759dcad1",
+            "title": "How long has this been a problem?",
+            "description": null,
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 5,
+            "type": "singleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "bc4463e7-d7ae-4a78-9eb1-d4d327bdfaca",
+                    "title": "0-6 months",
+                    "option": "0-6 months",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "6781fcf8-b96d-4da0-bb82-0990e8d4ba62",
+                    "title": "7-12 months",
+                    "option": "7-12 months",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 4,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "b1d8d82f-4040-416d-bb54-be6d67e8e429",
+                    "title": "More than a year",
+                    "option": "More than a year",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 6,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": []
+        },
+        {
+            "partnerQuestionnaireQuestionId": "ea200195-ada6-4d9f-a11d-0be9becc6774",
+            "title": "How concerned are you about this problem?",
+            "description": null,
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 10,
+            "type": "singleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "adcb3c49-4f64-4fd2-b453-0e9abad0bdf1",
+                    "title": "Not at all",
+                    "option": "Not at all",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "7066226e-2047-4cc4-99b2-7f45cdce5b5f",
+                    "title": "Somewhat",
+                    "option": "Somewhat",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 4,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "c5de878c-5d41-413f-9204-c4a25b365f1d",
+                    "title": "Very concerned",
+                    "option": "Very concerned",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 6,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": []
+        },
+        {
+            "partnerQuestionnaireQuestionId": "4fa340b2-f745-4357-89d9-47dd8dfb2612",
+            "title": "Which medications/devices have you tried?",
+            "description": null,
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 100,
+            "type": "multipleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "97664a7a-3745-4845-900e-e06e09b95f3d",
+                    "title": "Viagra (Sildenafil)",
+                    "option": "Viagra (Sildenafil)",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 1,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "93cd6801-2e3d-4618-af9d-7e9a4655b2c8",
+                    "title": "Cialis (Tadalafil)",
+                    "option": "Cialis (Tadalafil)",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "4555f350-7007-4af7-90aa-4a16a7511fdb",
+                    "title": "Levitra (Vardenafil)",
+                    "option": "Levitra (Vardenafil)",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 3,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "013021bc-8d55-4b44-b456-c96a20567d83",
+                    "title": "Device (Vacuum Pump/Implants)",
+                    "option": "Device (Vacuum Pump/Implants)",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 4,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "9176babe-9e3a-42bc-841a-eb89bf921b7c",
+                    "title": "Other",
+                    "option": "Other",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 5,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "067cdef2-09e5-4789-87d5-d855399c37e0",
+                    "title": "NONE of the above",
+                    "option": "NONE of the above",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 6,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": []
+        },
+        {
+            "partnerQuestionnaireQuestionId": "12038abc-ef55-4abb-bd42-719517f26579",
+            "title": "Did the Sildenafil (Viagra) help?",
+            "description": null,
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 105,
+            "type": "singleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "9decc81e-d62e-4c9a-8181-d27289df5247",
+                    "title": "It helped a lot",
+                    "option": "It helped a lot",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "cac959a6-b4f1-45bd-8d81-14f62477ab70",
+                    "title": "Somewhat",
+                    "option": "Somewhat",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 4,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "1c8a4d85-bf64-4471-80ad-7b923ebde62f",
+                    "title": "Not really",
+                    "option": "Not really",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 6,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": [
+                {
+                    "id": "34abc909-dd39-49e1-a1a7-e22a57b34dbd",
+                    "title": "Rule - Did the Sildenafil (Viagra) help?",
+                    "type": "and",
+                    "requirements": [
+                        {
+                            "basedOn": "question",
+                            "requiredQuestionId": "4fa340b2-f745-4357-89d9-47dd8dfb2612",
+                            "requiredQuestionTitle": "Which medications/devices have you tried?",
+                            "conditionalAnswer": null,
+                            "requiredAnswer": "Viagra (Sildenafil)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partnerQuestionnaireQuestionId": "a4416137-a03b-4d0b-8cd2-333661611aaa",
+            "title": "Did the Cialis (tadalafil) help?",
+            "description": null,
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 110,
+            "type": "singleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "e73a3d1a-8d3e-46b5-a605-04646b538553",
+                    "title": "It helped a lot",
+                    "option": "It helped a lot",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "58590c3f-7a75-4f81-b0c9-53c1169e4689",
+                    "title": "Somewhat",
+                    "option": "Somewhat",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 4,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "7f61c398-c184-4f1d-893c-28efe85b248e",
+                    "title": "Not really",
+                    "option": "Not really",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 6,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": [
+                {
+                    "id": "ac277a47-b7cc-4b60-a7f8-69f3e51ef0c2",
+                    "title": "Rule - Did the Cialis (tadalafil) help?",
+                    "type": "and",
+                    "requirements": [
+                        {
+                            "basedOn": "question",
+                            "requiredQuestionId": "4fa340b2-f745-4357-89d9-47dd8dfb2612",
+                            "requiredQuestionTitle": "Which medications/devices have you tried?",
+                            "conditionalAnswer": null,
+                            "requiredAnswer": "Cialis (Tadalafil)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partnerQuestionnaireQuestionId": "05679855-0a8d-4044-b52c-32cf5d630b77",
+            "title": "Did the Levitra (Vardenafil) help?",
+            "description": null,
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 115,
+            "type": "singleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "9bdec999-2cb2-4eba-9d9e-4cb906ff744f",
+                    "title": "It helped a lot",
+                    "option": "It helped a lot",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "7d91cf03-0b0d-4694-a062-25c626ce4e1e",
+                    "title": "Somewhat",
+                    "option": "Somewhat",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 4,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "032cde59-3f34-46b3-88ac-4b996c1678a1",
+                    "title": "Not at all",
+                    "option": "Not at all",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 6,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": [
+                {
+                    "id": "3d529d1c-c1f3-4e9e-9947-d42cc11e5aa3",
+                    "title": "Rule - Did the Levitra (Vardenafil) help?",
+                    "type": "and",
+                    "requirements": [
+                        {
+                            "basedOn": "question",
+                            "requiredQuestionId": "4fa340b2-f745-4357-89d9-47dd8dfb2612",
+                            "requiredQuestionTitle": "Which medications/devices have you tried?",
+                            "conditionalAnswer": null,
+                            "requiredAnswer": "Levitra (Vardenafil)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partnerQuestionnaireQuestionId": "ad9bafa2-5c12-4131-8be4-dca94d9ba6cb",
+            "title": "Did the device (Vacuum pump/implants) help?",
+            "description": null,
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 120,
+            "type": "singleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "a3b8d047-6988-4af8-94b7-f208e8250131",
+                    "title": "Quite a bit",
+                    "option": "Quite a bit",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "cea5af7d-66d8-49b7-b183-d2e69e434e93",
+                    "title": "Somewhat",
+                    "option": "Somewhat",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 4,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "d3ea01db-0f05-4e05-93b5-c02812d34b0e",
+                    "title": "Not at all",
+                    "option": "Not at all",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 6,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": [
+                {
+                    "id": "111f996b-e761-4aad-87d7-675abd3f7cfc",
+                    "title": "Rule - Did the device (Vacuum pump/implants) help?",
+                    "type": "and",
+                    "requirements": [
+                        {
+                            "basedOn": "question",
+                            "requiredQuestionId": "4fa340b2-f745-4357-89d9-47dd8dfb2612",
+                            "requiredQuestionTitle": "Which medications/devices have you tried?",
+                            "conditionalAnswer": null,
+                            "requiredAnswer": "Device (Vacuum Pump/Implants)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partnerQuestionnaireQuestionId": "f899ddc7-7960-4279-abba-c074e26e5076",
+            "title": "Tell us about what else you have tried.",
+            "description": "<ul><li>Was it helpful?</li></ul>",
+            "label": null,
+            "placeholder": null,
+            "isImportant": true,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 125,
+            "type": "text",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [],
+            "attachments": [],
+            "rules": [
+                {
+                    "id": "cedc2771-216a-4980-95f4-6bb3a70c15ea",
+                    "title": "Rule - Tell us about what else you have tried.",
+                    "type": "and",
+                    "requirements": [
+                        {
+                            "basedOn": "question",
+                            "requiredQuestionId": "4fa340b2-f745-4357-89d9-47dd8dfb2612",
+                            "requiredQuestionTitle": "Which medications/devices have you tried?",
+                            "conditionalAnswer": null,
+                            "requiredAnswer": "Other"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partnerQuestionnaireQuestionId": "52abcefb-d725-4405-b05f-7f39c3fba150",
+            "title": "Do any of the following apply to you?",
+            "description": null,
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 150,
+            "type": "multipleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "748223ec-01c4-4577-bb27-38e90c9799e8",
+                    "title": "I have been told that I am not healthy enough to have sex.",
+                    "option": "I have been told that I am not healthy enough to have sex.",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 1,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "5b79f12f-e08f-427d-8dc9-3f1a6a012839",
+                    "title": "Within the last year I have experienced chest pain AND/OR significant shortness of breath while exercising",
+                    "option": "Within the last year I have experienced chest pain AND/OR significant shortness of breath while exercising",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "0ee06384-4fbf-4dc3-8025-e058ea4886ac",
+                    "title": "I have experienced unexplained blurry vision or headaches.",
+                    "option": "I have experienced unexplained blurry vision or headaches.",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 3,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "323101b0-b4a1-4351-aa01-b0f1e41a2fa2",
+                    "title": "I am unable to walk one mile on a flat surface.",
+                    "option": "I am unable to walk one mile on a flat surface.",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 4,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "fdefb381-66f4-41e5-b35e-1a2b09d14d6f",
+                    "title": "I have been diagnosed with “low blood pressure.”",
+                    "option": "I have been diagnosed with “low blood pressure.”",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 5,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "2183e161-88c0-40bb-a0a6-8edd339b5566",
+                    "title": "NONE of the above",
+                    "option": "NONE of the above",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 6,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": []
+        },
+        {
+            "partnerQuestionnaireQuestionId": "afd612b7-29ec-4e91-9894-170f95c1ab4d",
+            "title": "Do you have any of the following conditions?",
+            "description": null,
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 170,
+            "type": "multipleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "01f8289a-3259-44b6-b1ec-c469863eafb8",
+                    "title": "Retinitis pigmentosa or anterior ischemic optic neuropathy",
+                    "option": "Retinitis pigmentosa or anterior ischemic optic neuropathy",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 1,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "0c677a0e-530a-438b-b3f5-e082483464a9",
+                    "title": "Severe aortic stenosis OR Hypertrophic obstructive cardiomyopathy (HOCM)",
+                    "option": "Severe aortic stenosis OR Hypertrophic obstructive cardiomyopathy (HOCM)",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "ae1bafb9-4f86-4a6a-acf7-4966afd4a0cd",
+                    "title": "Pulmonary Hypertension",
+                    "option": "Pulmonary Hypertension",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 3,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "3fc21c7a-1001-4719-908d-994b2038d4c0",
+                    "title": "Sickle cell anemia, myeloma, or leukemia",
+                    "option": "Sickle cell anemia, myeloma, or leukemia",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 4,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "1740646f-e158-4daa-9833-767c8e6648c9",
+                    "title": "Multiple sclerosis (MS) or similar disease, spinal injuries or paralysis",
+                    "option": "Multiple sclerosis (MS) or similar disease, spinal injuries or paralysis",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 5,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "aa592eea-b705-4a4c-b0b9-a29655dbe714",
+                    "title": "NONE of the above",
+                    "option": "NONE of the above",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 6,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": []
+        },
+        {
+            "partnerQuestionnaireQuestionId": "a720d9e0-7194-4a23-bcfc-68933d0c9f64",
+            "title": "You selected Pulmonary Hypertension.  Are you sure you have this diagnosis?",
+            "description": "<ul><li>Pulmonary hypertension is NOT the same as Essential Hypertension</li><li>It is rather rare</li><li>It usually requires a specialist to diagnose (often after an echocardiography, an ultrasound of the heart)</li></ul>",
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 175,
+            "type": "singleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "7e9c9526-1248-4181-a749-edc2b8471550",
+                    "title": "Yes I'm sure",
+                    "option": "Yes I'm sure",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "97edefcc-9a01-4031-a5b2-8beba15d45af",
+                    "title": "No, I'm not sure",
+                    "option": "No, I'm not sure",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 4,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "ebfa4eff-d056-4baf-9ecb-f6d57ab2cf56",
+                    "title": "Ooops, I made a mistake.  I meant 'essential hypertension'.",
+                    "option": "Ooops, I made a mistake.  I meant 'essential hypertension'.",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 6,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": [
+                {
+                    "id": "2c99b501-4456-4d5a-ab6f-d9770491b5fc",
+                    "title": "Rule - You selected Pulmonary Hypertension.  Are you sure you have this diagnosis?",
+                    "type": "and",
+                    "requirements": [
+                        {
+                            "basedOn": "question",
+                            "requiredQuestionId": "afd612b7-29ec-4e91-9894-170f95c1ab4d",
+                            "requiredQuestionTitle": "Do you have any of the following conditions?",
+                            "conditionalAnswer": null,
+                            "requiredAnswer": "Pulmonary Hypertension"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partnerQuestionnaireQuestionId": "cd532046-3d8a-4b30-9d11-968fd7674304",
+            "title": "Within the past 6 months, have you had a heart attack or cardiac surgery?",
+            "description": null,
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 180,
+            "type": "singleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "7decc3d0-36a2-43fb-81e5-1ddace4d8cfb",
+                    "title": "Yes, I've had a recent heart attack or cardiac surgery",
+                    "option": "Yes, I've had a recent heart attack or cardiac surgery",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "c052705d-60c0-4558-ad32-85b31e7f1be3",
+                    "title": "No",
+                    "option": "No",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 4,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": []
+        },
+        {
+            "partnerQuestionnaireQuestionId": "a409d891-f8f5-4997-b416-4f5cb6e2e71f",
+            "title": "Can you tell us more about what happened?",
+            "description": null,
+            "label": null,
+            "placeholder": "Ex: I had a coronary stent placed one month ago",
+            "isImportant": true,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 185,
+            "type": "text",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [],
+            "attachments": [],
+            "rules": [
+                {
+                    "id": "e7d5e48c-0657-4b14-b13c-fdcd8a3cafa7",
+                    "title": "Rule - Can you tell us more about what happened?",
+                    "type": "and",
+                    "requirements": [
+                        {
+                            "basedOn": "question",
+                            "requiredQuestionId": "cd532046-3d8a-4b30-9d11-968fd7674304",
+                            "requiredQuestionTitle": "Within the past 6 months, have you had a heart attack or cardiac surgery?",
+                            "conditionalAnswer": null,
+                            "requiredAnswer": "Yes, I've had a recent heart attack or cardiac surgery"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partnerQuestionnaireQuestionId": "a06f6d11-4b7f-459e-9d47-782e9351c4f7",
+            "title": "Have you ever had any physical abnormalities with your genitals?",
+            "description": null,
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 190,
+            "type": "multipleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "ca4eee93-d66a-43e2-9bb7-8cd8a4eaa57c",
+                    "title": "Previous priapism (erection lasting longer than 4 hours requiring medical treatment)",
+                    "option": "Previous priapism (erection lasting longer than 4 hours requiring medical treatment)",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 1,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "44ac7330-187d-4020-8c77-525dfcd2440d",
+                    "title": "Peyronie's Disease",
+                    "option": "Peyronie's Disease",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "48d09812-18b2-49f8-bae1-a5f83c2c3127",
+                    "title": "Significant bend in penis which IS painful upon erection",
+                    "option": "Significant bend in penis which IS painful upon erection",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 3,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "0f9c7efc-2b94-4ae2-9ece-83e0f330ca7c",
+                    "title": "Genital surgery (not including infant circumcision)/Pelvic trauma",
+                    "option": "Genital surgery (not including infant circumcision)/Pelvic trauma",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 4,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "bfe19c41-441b-499e-9a73-b33c06d8986c",
+                    "title": "NONE of the above",
+                    "option": "NONE of the above",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 5,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": []
+        },
+        {
+            "partnerQuestionnaireQuestionId": "5de8f6a1-2aad-4de3-9d71-61fe7a959f34",
+            "title": "Do you have any of the following?",
+            "description": null,
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 200,
+            "type": "multipleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "14d8a21f-2e7b-4e20-b99f-9237d9ebe4c8",
+                    "title": "History of kidney failure/kidney disease",
+                    "option": "History of kidney failure/kidney disease",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 1,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "0d01bbea-4838-4ed6-ae78-f176fbb58361",
+                    "title": "Have seen a kidney specialist (nephrologist)",
+                    "option": "Have seen a kidney specialist (nephrologist)",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "2b2f0ae4-fa8d-4357-8f67-13fd81275bab",
+                    "title": "Severe kidney disease (stage 3 or ESRD or CrCl < 35)",
+                    "option": "Severe kidney disease (stage 3 or ESRD or CrCl < 35)",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 3,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "ff484df8-1999-4555-8302-641984c51cd4",
+                    "title": "Previously or currently on dialysis",
+                    "option": "Previously or currently on dialysis",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 4,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "fab93e21-bc03-4005-87af-ff76f659b1ad",
+                    "title": "NONE of the above",
+                    "option": "NONE of the above",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 6,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": []
+        },
+        {
+            "partnerQuestionnaireQuestionId": "4d695e11-1f39-4921-aad1-a6da89633acb",
+            "title": "Have you had any lab tests within the past 6 months that include your renal function (Creatinine, CrCl, or GFR)?",
+            "description": null,
+            "label": null,
+            "placeholder": null,
+            "isImportant": true,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 210,
+            "type": "multipleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "276a29b5-05a3-465a-8568-9b482bc27081",
+                    "title": "Yes",
+                    "option": "Yes",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 1,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "a47883c3-fc3e-4820-9997-deff3996632c",
+                    "title": "No",
+                    "option": "No",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": [
+                {
+                    "id": "e385043e-596c-4ce5-b0eb-7d567467849d",
+                    "title": "Rule - Have you had any lab tests within the past 6 months that include your renal function (Creatinine, CrCl, or GFR)?",
+                    "type": "and",
+                    "requirements": [
+                        {
+                            "basedOn": "question",
+                            "requiredQuestionId": "5de8f6a1-2aad-4de3-9d71-61fe7a959f34",
+                            "requiredQuestionTitle": "Do you have any of the following?",
+                            "conditionalAnswer": null,
+                            "requiredAnswer": "History of kidney failure/kidney disease"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partnerQuestionnaireQuestionId": "4007cd37-435b-43d7-9b21-137ef4a02e46",
+            "title": "Please upload lab results",
+            "description": "<ul><li>If you are unable to provide at this time, your doctor may require you to upload your labs prior to prescribing medication.</li></ul>",
+            "label": null,
+            "placeholder": null,
+            "isImportant": true,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": true,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 220,
+            "type": "file",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [],
+            "attachments": [],
+            "rules": [
+                {
+                    "id": "2a056515-2333-416f-b50c-37ffd4bd1e7a",
+                    "title": "Rule - Please upload lab results",
+                    "type": "and",
+                    "requirements": [
+                        {
+                            "basedOn": "question",
+                            "requiredQuestionId": "4d695e11-1f39-4921-aad1-a6da89633acb",
+                            "requiredQuestionTitle": "Have you had any lab tests within the past 6 months that include your renal function (Creatinine, CrCl, or GFR)?",
+                            "conditionalAnswer": null,
+                            "requiredAnswer": "Yes"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partnerQuestionnaireQuestionId": "731b45ae-eb62-42d8-b3f6-f7f74f30e0c4",
+            "title": "Please provide details from your most recent lab test.",
+            "description": "<ul><li>If you were not able to upload a photo/file of your labs, please type them here.</li><li>We need information about your Creatinine, GFR, or CrCl.</li></ul>",
+            "label": null,
+            "placeholder": "Ex: Creatinine 1.8. GFR 30",
+            "isImportant": true,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 230,
+            "type": "text",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [],
+            "attachments": [],
+            "rules": [
+                {
+                    "id": "4eb81bf7-c2d3-4523-8ae6-7c1c213e5da5",
+                    "title": "Rule - Please provide details from your most recent lab test.",
+                    "type": "and",
+                    "requirements": [
+                        {
+                            "basedOn": "question",
+                            "requiredQuestionId": "4d695e11-1f39-4921-aad1-a6da89633acb",
+                            "requiredQuestionTitle": "Have you had any lab tests within the past 6 months that include your renal function (Creatinine, CrCl, or GFR)?",
+                            "conditionalAnswer": null,
+                            "requiredAnswer": "Yes"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partnerQuestionnaireQuestionId": "535117da-109d-4d5d-904b-668c606358ab",
+            "title": "Please describe the reasons for your consultation with the renal/kidney specialist.",
+            "description": null,
+            "label": null,
+            "placeholder": "Ex: Evaluated for possible dialysis",
+            "isImportant": true,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 235,
+            "type": "text",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [],
+            "attachments": [],
+            "rules": [
+                {
+                    "id": "b6a53b1e-29bd-4645-b428-25373990e925",
+                    "title": "Rule - Please describe the reasons for your consultation with the renal/kidney specialist.",
+                    "type": "and",
+                    "requirements": [
+                        {
+                            "basedOn": "question",
+                            "requiredQuestionId": "5de8f6a1-2aad-4de3-9d71-61fe7a959f34",
+                            "requiredQuestionTitle": "Do you have any of the following?",
+                            "conditionalAnswer": null,
+                            "requiredAnswer": "Have seen a kidney specialist (nephrologist)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partnerQuestionnaireQuestionId": "65ea1a35-47c1-4bbc-8eaf-a777831e9d8b",
+            "title": "Have you used any of the following in the past 3 months?",
+            "description": "<div><strong>Please note: death can result if ED meds are used in conjunction with certain recreational drugs.</strong></div>",
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 240,
+            "type": "multipleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "4428bb88-5d20-428e-bc2b-db2addcc1e66",
+                    "title": "Poppers or Rush (Amyl Nitrate or Butyl Nitrate)",
+                    "option": "Poppers or Rush (Amyl Nitrate or Butyl Nitrate)",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 1,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "54128550-ba3c-44d6-a18e-4208026af008",
+                    "title": "Cocaine",
+                    "option": "Cocaine",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "0749d784-ab90-4b8d-b14d-ec8fdb4f7566",
+                    "title": "Methamphetamine (crystal meth)",
+                    "option": "Methamphetamine (crystal meth)",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 3,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "883a510f-352d-490f-9140-dd673bc64ada",
+                    "title": "NONE of the above",
+                    "option": "NONE of the above",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 4,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": []
+        },
+        {
+            "partnerQuestionnaireQuestionId": "156cb02f-af4f-437e-85e6-6a884e96d6f7",
+            "title": "Do you take any of the following medications?",
+            "description": "<div>Please note: death can result if ED medications are used in conjunction with nitrates (often prescribed for chest pain/angina) or other medications. Please be accurate.</div>",
+            "label": null,
+            "placeholder": null,
+            "isImportant": true,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 300,
+            "type": "multipleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "d00a50a7-2989-446b-ad80-3acc1502038a",
+                    "title": "Adempas (Riociquat), which is used to treat pulmonary hypertension.",
+                    "option": "Adempas (Riociquat), which is used to treat pulmonary hypertension.",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 1,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "63b21a2c-2f0f-4d8c-a174-25aa8c99a472",
+                    "title": "Alpha blockers (ex: alfuzolin, terazosin, doxazosin, tamsulosin)",
+                    "option": "Alpha blockers (ex: alfuzolin, terazosin, doxazosin, tamsulosin)",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "b22d0d3b-f212-4d90-95e5-8a020b18a344",
+                    "title": "Cimetidine, Erythromycin, OR Digitoxin",
+                    "option": "Cimetidine, Erythromycin, OR Digitoxin",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 3,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "e3818491-9cbb-4f92-9579-911bcf5226eb",
+                    "title": "Ketoconazole/itraconazole (oral only. NOT topical)",
+                    "option": "Ketoconazole/itraconazole (oral only. NOT topical)",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 4,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "6b574ee1-3567-46e8-ae52-66ffb72dfe26",
+                    "title": "Ritonavir or Saquinavir",
+                    "option": "Ritonavir or Saquinavir",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 5,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "e93523a9-80b2-4637-b3cb-b52db6bf22e9",
+                    "title": "Trazodone",
+                    "option": "Trazodone",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 6,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "f000d9a2-0f5f-4ddf-bb81-0b0d67f73889",
+                    "title": "NONE of the above",
+                    "option": "NONE of the above",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 7,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": []
+        },
+        {
+            "partnerQuestionnaireQuestionId": "658f543f-3d86-4212-9960-47929041710a",
+            "title": "Have you ever been prescribed nitrates/nitroglycerin?",
+            "description": "<ul><li>Eg: Nitrostat, nitrogard, Imdur, isosorbide dinitrate, isosorbide mononitrate</li></ul>",
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 400,
+            "type": "multipleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "3034df5b-600f-42d7-80f7-d0472a06f729",
+                    "title": "Yes",
+                    "option": "Yes",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 1,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "92e72356-c9bc-4cc4-ac5f-3dae80f7c2e8",
+                    "title": "No",
+                    "option": "No",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": []
+        },
+        {
+            "partnerQuestionnaireQuestionId": "91f81db3-6f69-4055-99a9-b35c6ef0b434",
+            "title": "Please provide as much detail as possible.  When was the last time you were prescribed nitrates/nitroglycerine",
+            "description": null,
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": true,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 410,
+            "type": "string",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [],
+            "attachments": [],
+            "rules": [
+                {
+                    "id": "7d4e1412-8fc3-4f42-a6a4-a8c8f04254fe",
+                    "title": "Rule - Please provide as much detail as possible.  When was the last time you were prescribed nitrates/nitroglycerine",
+                    "type": "and",
+                    "requirements": [
+                        {
+                            "basedOn": "question",
+                            "requiredQuestionId": "658f543f-3d86-4212-9960-47929041710a",
+                            "requiredQuestionTitle": "Have you ever been prescribed nitrates/nitroglycerin?",
+                            "conditionalAnswer": null,
+                            "requiredAnswer": "Yes"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partnerQuestionnaireQuestionId": "4cd558b9-a612-41df-85fc-5703237097d4",
+            "title": "Have you had your vitals tested by a medical practitioner in the past 3 years?",
+            "description": "<div>This includes weight, blood pressure, and heart rate.</div>",
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 500,
+            "type": "multipleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "bfce4bdf-dcbb-48ce-b058-aa02da9cab47",
+                    "title": "Yes",
+                    "option": "Yes",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 1,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "766e3fec-c96c-497a-9539-539b7aba4fa4",
+                    "title": "No",
+                    "option": "No",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": []
+        },
+        {
+            "partnerQuestionnaireQuestionId": "eba4cfeb-558f-4f88-89ae-172b000bf942",
+            "title": "What is your blood pressure on an average day (even when taking medication)?",
+            "description": null,
+            "label": null,
+            "placeholder": null,
+            "isImportant": false,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 510,
+            "type": "multipleOption",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [
+                {
+                    "partnerQuestionnaireQuestionOptionId": "4b63bfbc-8525-4405-aa24-e57450c28e36",
+                    "title": "Normal (110-120mmHg/70-80mmHg)",
+                    "option": "Normal (110-120mmHg/70-80mmHg)",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 1,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "41aa73d4-e186-4236-9317-57072aa84f47",
+                    "title": "Mildly Elevated (121-130mmHg/80-90mmHg)",
+                    "option": "Mildly Elevated (121-130mmHg/80-90mmHg)",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 2,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "6a95b3b4-5f3c-4763-8971-abc119103c6c",
+                    "title": "Elevated (141-160mmHg/90-100mmHg)",
+                    "option": "Elevated (141-160mmHg/90-100mmHg)",
+                    "isImportant": false,
+                    "isCritical": false,
+                    "order": 3,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "6c301d17-507e-4f71-9d65-aacc2a593b4a",
+                    "title": "Severe elevation (>160mmHg/110mmHg)",
+                    "option": "Severe elevation (>160mmHg/110mmHg)",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 4,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "b403fec9-2a55-447a-81fb-c6d1e647ac3a",
+                    "title": "Mildly low (100-110mmHg/65-70mmHg)",
+                    "option": "Mildly low (100-110mmHg/65-70mmHg)",
+                    "isImportant": true,
+                    "isCritical": false,
+                    "order": 5,
+                    "iconType": null,
+                    "icon": null
+                },
+                {
+                    "partnerQuestionnaireQuestionOptionId": "0345e8eb-04cc-42f0-bdc3-7e24a4a72558",
+                    "title": "Very low (<95mmHg/<65mmHg)",
+                    "option": "Very low (<95mmHg/<65mmHg)",
+                    "isImportant": false,
+                    "isCritical": true,
+                    "order": 6,
+                    "iconType": null,
+                    "icon": null
+                }
+            ],
+            "attachments": [],
+            "rules": []
+        },
+        {
+            "partnerQuestionnaireQuestionId": "e579bf94-d699-491c-85ea-c668e9d3b847",
+            "title": "Here’s your first message to your doctor. Please introduce yourself and feel free to:",
+            "description": "<ul><li>Ask any questions you have</li><li>List any medical problems you have which were not discussed above.</li><li>Include anything else you would like the doctor to know.<br><br></li></ul>",
+            "label": null,
+            "placeholder": null,
+            "isImportant": true,
+            "isCritical": false,
+            "displayInPdf": false,
+            "isOptional": false,
+            "isVisible": true,
+            "hasNextButton": true,
+            "hasBackButton": true,
+            "order": 900,
+            "type": "text",
+            "defaultValue": null,
+            "feedAds": null,
+            "ruleType": "and",
+            "holdStatus": false,
+            "isAdditionalApprovalNeeded": false,
+            "options": [],
+            "attachments": [],
+            "rules": []
+        }
+    ]
+}
