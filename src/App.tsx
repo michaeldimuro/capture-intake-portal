@@ -9,9 +9,8 @@ import { Questionnaire } from "@/components/checkout/Questionnaire";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Product, Question } from "./lib/types";
-import mockProduct from '../mockProduct.json'
 
-const steps = [
+let steps = [
   {
     title: "Confirm",
     description: "Review selection",
@@ -45,15 +44,29 @@ function App() {
     questionnaire: null,
   });
 
-  // const searchParams = useSearchParams();
+  
+  const params = new URLSearchParams(window.location.search);
+  console.log("Params: ", params)
+
+  useEffect(() => {  
+    const emr = params.get('emr');
+
+    if (emr === 'none') {
+      // remove the last element in steps
+      // console.log("DEBUG >> Slicing Steps")
+      // steps = steps.slice(0, steps.length - 1);
+    }
+  }, [params])
+  
+
   const productId = "9a12e826-dc28-4c44-b7a3-091521fa9b7a";
 
   const fetchProduct = async (productId: string) => {
-    // const p = await fetch(
-    //   `http://localhost:3030/dev/company/product-details/${productId}`
-    // ).then((res) => res.json());
+    const p = await fetch(
+      `http://localhost:3030/dev/company/product-details/${productId}`
+    ).then((res) => res.json());
 
-    const p = mockProduct as any;
+    // const p = mockProduct as any;
 
     setProduct({
       ...p,
@@ -129,7 +142,6 @@ function App() {
   return (
     <ThemeProvider>
       <div className="min-h-screen bg-gray-50/50 p-4 md:p-8">
-
         <div className="flex max-w-4xl mx-auto my-8 justify-center">
           <img
             src="https://theme.zdassets.com/theme_assets/2078614/82ac03808ea5074dffd64685ecb1572b7902dfc8.png"
@@ -146,7 +158,7 @@ function App() {
         </div>
 
         <div className="flex max-w-4xl mx-auto my-6 justify-center">
-          <span className='text-slate-700'>Powered by Capture Health</span>
+          <span className="text-slate-700">Powered by Capture Health</span>
         </div>
       </div>
       <Toaster />

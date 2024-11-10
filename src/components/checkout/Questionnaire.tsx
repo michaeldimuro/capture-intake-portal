@@ -66,7 +66,7 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
       }
       nextIndex++;
     }
-    return -1; // No more visible questions
+    return -1;
   };
 
   const findPreviousVisibleQuestionIndex = (startIndex: number): number => {
@@ -77,7 +77,7 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
       }
       prevIndex--;
     }
-    return -1; // No previous visible questions
+    return -1;
   };
 
   const handleAnswer = (questionId: string, value: any) => {
@@ -89,7 +89,6 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
     if (nextIndex !== -1) {
       setCurrentQuestionIndex(nextIndex);
     } else {
-      // All questions have been answered
       onSubmit(answers);
     }
   };
@@ -122,21 +121,25 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
                     defaultValue={answers[question.partnerQuestionnaireQuestionId]}
                     className="space-y-2"
                   >
-                    {question.options.map((option) => (
-                      <FormItem
-                        key={option.partnerQuestionnaireQuestionOptionId}
-                        className="flex items-center space-x-3 space-y-0"
-                      >
-                        <FormControl>
-                          <RadioGroupItem
-                            value={option.option}
-                          />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          {option.title}
-                        </FormLabel>
-                      </FormItem>
-                    ))}
+                    {question.options.map((option) => {
+                      const isSelected = answers[question.partnerQuestionnaireQuestionId] === option.option;
+                      return (
+                        <FormItem
+                          key={option.partnerQuestionnaireQuestionOptionId}
+                          className="flex items-center space-x-3 space-y-0"
+                        >
+                          <FormControl>
+                            <RadioGroupItem
+                              value={option.option}
+                              className={isSelected ? "border-primary bg-primary text-primary-foreground" : "border-input bg-background"}
+                            />
+                          </FormControl>
+                          <FormLabel className={`font-normal ${isSelected ? "text-primary" : "text-muted-foreground"}`}>
+                            {option.title}
+                          </FormLabel>
+                        </FormItem>
+                      );
+                    })}
                   </RadioGroup>
                 </FormControl>
                 <FormMessage />
@@ -159,28 +162,32 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
                   />
                 )}
                 <div className="space-y-2">
-                  {question.options.map((option) => (
-                    <FormItem
-                      key={option.partnerQuestionnaireQuestionOptionId}
-                      className="flex items-center space-x-3 space-y-0"
-                    >
-                      <FormControl>
-                        <Checkbox
-                          checked={answers[question.partnerQuestionnaireQuestionId]?.includes(option.option)}
-                          onCheckedChange={(checked) => {
-                            const currentAnswers = answers[question.partnerQuestionnaireQuestionId] || [];
-                            const newAnswers = checked
-                              ? [...currentAnswers, option.option]
-                              : currentAnswers.filter((a: string) => a !== option.option);
-                            handleAnswer(question.partnerQuestionnaireQuestionId, newAnswers);
-                          }}
-                        />
-                      </FormControl>
-                      <FormLabel className="font-normal">
-                        {option.title}
-                      </FormLabel>
-                    </FormItem>
-                  ))}
+                  {question.options.map((option) => {
+                    const isSelected = answers[question.partnerQuestionnaireQuestionId]?.includes(option.option);
+                    return (
+                      <FormItem
+                        key={option.partnerQuestionnaireQuestionOptionId}
+                        className="flex items-center space-x-3 space-y-0"
+                      >
+                        <FormControl>
+                          <Checkbox
+                            checked={isSelected}
+                            onCheckedChange={(checked) => {
+                              const currentAnswers = answers[question.partnerQuestionnaireQuestionId] || [];
+                              const newAnswers = checked
+                                ? [...currentAnswers, option.option]
+                                : currentAnswers.filter((a: string) => a !== option.option);
+                              handleAnswer(question.partnerQuestionnaireQuestionId, newAnswers);
+                            }}
+                            className={isSelected ? "border-primary bg-primary text-primary-foreground" : "border-input bg-background"}
+                          />
+                        </FormControl>
+                        <FormLabel className={`font-normal ${isSelected ? "text-primary" : "text-muted-foreground"}`}>
+                          {option.title}
+                        </FormLabel>
+                      </FormItem>
+                    );
+                  })}
                 </div>
                 <FormMessage />
               </FormItem>

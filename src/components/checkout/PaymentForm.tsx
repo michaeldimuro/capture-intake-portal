@@ -16,7 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CreditCard } from 'lucide-react';
 
 const formSchema = z.object({
-  cardNumber: z.string().min(16, 'Invalid card number'),
+  cardNumber: z.string().min(19, 'Invalid card number'),
   expiryDate: z.string().regex(/^\d{2}\/\d{2}$/, 'Invalid expiry date (MM/YY)'),
   cvv: z.string().length(3, 'Invalid CVV'),
   nameOnCard: z.string().min(2, 'Name on card is required'),
@@ -36,6 +36,20 @@ export function PaymentForm({ onSubmit }: PaymentFormProps) {
       nameOnCard: '',
     },
   });
+
+  const formatCardNumber = (value: string) => {
+    const digits = value.replace(/\D/g, '');
+    const groups = digits.match(/.{1,4}/g);
+    return groups ? groups.join(' ') : digits;
+  };
+
+  const formatExpiryDate = (value: string) => {
+    const digits = value.replace(/\D/g, '');
+    if (digits.length >= 2) {
+      return `${digits.slice(0, 2)}/${digits.slice(2, 4)}`;
+    }
+    return digits;
+  };
 
   return (
     <Card className="w-full max-w-2xl">
@@ -64,14 +78,19 @@ export function PaymentForm({ onSubmit }: PaymentFormProps) {
             <FormField
               control={form.control}
               name="cardNumber"
-              render={({ field }) => (
+              render={({ field: { onChange, ...field } }) => (
                 <FormItem>
                   <FormLabel>Card Number</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
-                      maxLength={16}
+                      maxLength={19}
                       placeholder="1234 5678 9012 3456"
+                      onChange={(e) => {
+                        const formatted = formatCardNumber(e.target.value);
+                        e.target.value = formatted;
+                        onChange(e);
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
@@ -82,11 +101,20 @@ export function PaymentForm({ onSubmit }: PaymentFormProps) {
               <FormField
                 control={form.control}
                 name="expiryDate"
-                render={({ field }) => (
+                render={({ field: { onChange, ...field } }) => (
                   <FormItem>
                     <FormLabel>Expiry Date</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="MM/YY" maxLength={5} />
+                      <Input
+                        {...field}
+                        placeholder="MM/YY"
+                        maxLength={5}
+                        onChange={(e) => {
+                          const formatted = formatExpiryDate(e.target.value);
+                          e.target.value = formatted;
+                          onChange(e);
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
