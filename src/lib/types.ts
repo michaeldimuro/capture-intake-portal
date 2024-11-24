@@ -1,10 +1,15 @@
 export interface Product {
   id: string;
   name: string;
-  price: number;
   description: string;
   image: string;
   questions: Question[];
+  variant: ProductVariant;
+}
+
+export interface ProductVariant {
+  price: number;
+  quantity: number;
 }
 
 export interface CustomerDetails {
@@ -28,6 +33,13 @@ export interface PaymentDetails {
   expiryDate: string;
   cvv: string;
   nameOnCard: string;
+  sameAsShipping: boolean;
+  billingAddress1?: string;
+  billingAddress2?: string;
+  billingCity?: string;
+  billingState?: string;
+  billingZipCode?: string;
+  billingCountry?: string;
 }
 
 export interface QuestionnaireResponse {

@@ -28,7 +28,7 @@ export function ProductConfirmation({ product, onConfirm }: ProductConfirmationP
             <h3 className="text-lg font-semibold">{product.name}</h3>
             <p className="text-sm text-muted-foreground">{product.description}</p>
             <p className="mt-2 text-lg font-bold">
-              ${product.price.toFixed(2)}
+              ${Number(product?.variant?.price).toFixed(2)}
             </p>
           </div>
         </div>

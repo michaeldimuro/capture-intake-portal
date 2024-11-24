@@ -36,50 +36,60 @@ let steps = [
 function App() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [company, setCompany] = useState<any | null>(null);
   const [product, setProduct] = useState<Product | null>(null);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [offeringId, setOfferingId] = useState<string | null>(null);
+
   const [formData, setFormData] = useState({
+    offeringId: offeringId,
     customer: null,
     shipping: null,
     payment: null,
     questionnaire: null,
   });
 
-  
   const params = new URLSearchParams(window.location.search);
-  console.log("Params: ", params)
 
-  useEffect(() => {  
-    const emr = params.get('emr');
-
-    if (emr === 'none') {
-      // remove the last element in steps
-      // console.log("DEBUG >> Slicing Steps")
-      // steps = steps.slice(0, steps.length - 1);
+  useEffect(() => {
+    const oid = params.get('oid');
+    if (!oid) {
+      window.location.href = 'https://capturehealth.io';
+    } else {
+      setOfferingId(oid);
     }
   }, [params])
-  
 
-  const productId = "9a12e826-dc28-4c44-b7a3-091521fa9b7a";
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, offeringId: offeringId }));
+  }, [offeringId])
 
-  const fetchProduct = async (productId: string) => {
-    const p = await fetch(
-      `http://localhost:3030/dev/company/product-details/${productId}`
+
+  const fetchConfig = async (offeringId: string) => {
+    const config = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/intake/settings/${offeringId}`
     ).then((res) => res.json());
 
-    // const p = mockProduct as any;
+    const { company, offering, questions } = config;
 
-    setProduct({
-      ...p,
-      image:
-        "https://www.ziphealth.co/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fzh_sildenafil_PDP-ecom-hero_A_desktop.1853e43a.jpg&w=3840&q=75",
-      price: 23.99,
-    });
+    setCompany(company);
+    setProduct(offering);
+    setQuestions(questions);
+    // setProduct({
+    //   ...p,
+    //   image:
+    //     "https://www.ziphealth.co/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fzh_sildenafil_PDP-ecom-hero_A_desktop.1853e43a.jpg&w=3840&q=75",
+    //   price: 23.99,
+    // });
     setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchProduct(productId);
-  }, [productId]);
+    console.log("Offering ID: ", offeringId);
+    if (offeringId) {
+      fetchConfig(offeringId);
+    }
+  }, [offeringId]);
 
   useEffect(() => {
     console.log("Updated Form Data: ", formData);
@@ -126,12 +136,17 @@ function App() {
       case 2:
         return <ShippingForm onSubmit={handleShippingSubmit} />;
       case 3:
-        return <PaymentForm onSubmit={handlePaymentSubmit} />;
+        return (
+          <PaymentForm 
+            onSubmit={handlePaymentSubmit} 
+            shippingDetails={formData.shipping!}
+          />
+        );
       case 4:
         return (
           <Questionnaire
             onSubmit={handleQuestionnaireSubmit}
-            questions={product?.questions as Question[]}
+            questions={questions as Question[]}
           />
         );
       default:
