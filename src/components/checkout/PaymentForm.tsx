@@ -81,12 +81,12 @@ export function PaymentForm({
     defaultValues: {
       // nameOnCard: 'Michael DiMuro',
       sameAsShipping: true,
-      billingAddress1: shippingDetails?.address1 || "546 Stonewall Drive",
-      billingAddress2: shippingDetails?.address2 || "",
-      billingCity: shippingDetails?.city || "Galloway",
-      billingState: shippingDetails?.state || "NJ",
-      billingZipCode: shippingDetails?.zipCode || "08205",
-      billingCountry: shippingDetails?.country || "US",
+      billingAddress1: shippingDetails?.address1,
+      billingAddress2: shippingDetails?.address2,
+      billingCity: shippingDetails?.city,
+      billingState: shippingDetails?.state,
+      billingZipCode: shippingDetails?.zipCode,
+      billingCountry: shippingDetails?.country,
     },
   });
 
@@ -94,13 +94,13 @@ export function PaymentForm({
     if (sameAsShipping) {
       form.setValue(
         "billingAddress1",
-        shippingDetails?.address1 || "546 Stonewall Drive"
+        shippingDetails?.address1
       );
-      form.setValue("billingAddress2", shippingDetails?.address2 || "");
-      form.setValue("billingCity", shippingDetails?.city || "Galloway");
-      form.setValue("billingState", shippingDetails?.state || "NJ");
-      form.setValue("billingZipCode", shippingDetails?.zipCode || "08205");
-      form.setValue("billingCountry", shippingDetails?.country || "US");
+      form.setValue("billingAddress2", shippingDetails?.address2);
+      form.setValue("billingCity", shippingDetails?.city);
+      form.setValue("billingState", shippingDetails?.state);
+      form.setValue("billingZipCode", shippingDetails?.zipCode);
+      form.setValue("billingCountry", shippingDetails?.country);
     } else {
       form.setValue("billingAddress1", "");
       form.setValue("billingAddress2", "");

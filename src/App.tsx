@@ -126,7 +126,7 @@ function App() {
 
   const renderStep = () => {
     switch (currentStep) {
-      case -1:
+      case 0:
         return (
           <ProductConfirmation
             product={product as Product}
@@ -137,7 +137,7 @@ function App() {
         return <CustomerForm onSubmit={handleCustomerSubmit} />;
       case 2:
         return <ShippingForm onSubmit={handleShippingSubmit} />;
-      case 0:
+      case 3:
         return (
           <PaymentForm 
             onSubmit={handlePaymentSubmit} 
