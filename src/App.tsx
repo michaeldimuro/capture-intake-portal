@@ -33,6 +33,8 @@ let steps = [
   },
 ];
 
+const stripePublishableKey = 'pk_test_51Pr9I8P9FTx6jjDplhrzT6ggqFpVQwsGsNtu9BLXlOZ4AFjqiZUqrAiElgW1H0NSMjBpyBQ4QHIsnWgCJRXCcDUm00TOJB1lpY'
+
 function App() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -124,7 +126,7 @@ function App() {
 
   const renderStep = () => {
     switch (currentStep) {
-      case 0:
+      case -1:
         return (
           <ProductConfirmation
             product={product as Product}
@@ -135,11 +137,12 @@ function App() {
         return <CustomerForm onSubmit={handleCustomerSubmit} />;
       case 2:
         return <ShippingForm onSubmit={handleShippingSubmit} />;
-      case 3:
+      case 0:
         return (
           <PaymentForm 
             onSubmit={handlePaymentSubmit} 
             shippingDetails={formData.shipping!}
+            stripePublishableKey={stripePublishableKey}
           />
         );
       case 4:

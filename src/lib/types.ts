@@ -29,10 +29,7 @@ export interface ShippingDetails {
 }
 
 export interface PaymentDetails {
-  cardNumber: string;
-  expiryDate: string;
-  cvv: string;
-  nameOnCard: string;
+  token: string;
   sameAsShipping: boolean;
   billingAddress1?: string;
   billingAddress2?: string;
@@ -52,6 +49,14 @@ export interface ThemeConfig {
   accentColor: string;
   logo?: string;
   fontFamily?: string;
+}
+
+export interface Company {
+  id: string;
+  name: string;
+  stripePublishableKey: string;
+  logo?: string;
+  theme?: ThemeConfig;
 }
 
 export interface QuestionOption {
