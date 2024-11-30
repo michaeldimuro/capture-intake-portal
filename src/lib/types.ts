@@ -17,6 +17,8 @@ export interface CustomerDetails {
   lastName: string;
   email: string;
   phone: string;
+  dateOfBirth: string;
+  gender: string;
 }
 
 export interface ShippingDetails {
