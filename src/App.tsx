@@ -6,11 +6,12 @@ import { CustomerForm } from "@/components/checkout/CustomerForm";
 import { ShippingForm } from "@/components/checkout/ShippingForm";
 import { PaymentForm } from "@/components/checkout/PaymentForm";
 import { Questionnaire } from "@/components/checkout/Questionnaire";
+import { LoadingScreen } from "@/components/loading-screen";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Product, Question } from "./lib/types";
 
-let steps = [
+const steps = [
   {
     title: "Confirm",
     description: "Review selection",
@@ -66,40 +67,32 @@ function App() {
     setFormData((prev) => ({ ...prev, offeringId: offeringId }));
   }, [offeringId])
 
-
   const fetchConfig = async (offeringId: string) => {
-    const config = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/intake/settings/${offeringId}`
-    ).then((res) => res.json());
+    try {
+      const config = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/intake/settings/${offeringId}`
+      ).then((res) => res.json());
 
-    const { company, offering, questions } = config;
+      const { company, offering, questions } = config;
 
-    setCompany(company);
-    setProduct(offering);
-    setQuestions(questions);
-    // setProduct({
-    //   ...p,
-    //   image:
-    //     "https://www.ziphealth.co/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fzh_sildenafil_PDP-ecom-hero_A_desktop.1853e43a.jpg&w=3840&q=75",
-    //   price: 23.99,
-    // });
-    setIsLoading(false);
+      setCompany(company);
+      setProduct(offering);
+      setQuestions(questions);
+    } catch (error) {
+      console.error('Error fetching config:', error);
+      toast.error('Failed to load configuration');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
-    console.log("Offering ID: ", offeringId);
     if (offeringId) {
       fetchConfig(offeringId);
     }
   }, [offeringId]);
 
-  useEffect(() => {
-    console.log("Updated Form Data: ", formData);
-  }, [formData]);
-
-  const handleProductConfirm = () => {
-    setCurrentStep(1);
-  };
+  const handleProductConfirm = () => setCurrentStep(1);
 
   const handleCustomerSubmit = (data: any) => {
     setFormData((prev) => ({ ...prev, customer: data }));
@@ -118,7 +111,6 @@ function App() {
 
   const handleQuestionnaireSubmit = (data: any) => {
     setFormData((prev) => ({ ...prev, questionnaire: data }));
-    // Here you would typically submit all the collected data to your backend
     toast.success("Order completed successfully!", {
       description: "Thank you for your purchase.",
     });
@@ -159,26 +151,30 @@ function App() {
 
   return (
     <ThemeProvider>
-      <div className="min-h-screen bg-gray-50/50 p-4 md:p-8">
-        <div className="flex max-w-4xl mx-auto my-8 justify-center">
-          <img
-            src="https://theme.zdassets.com/theme_assets/2078614/82ac03808ea5074dffd64685ecb1572b7902dfc8.png"
-            alt="Company Logo"
-            width={150}
-          />
-        </div>
+      {isLoading ? (
+        <LoadingScreen />
+      ) : (
+        <div className="min-h-screen bg-gray-50/50 p-4 md:p-8">
+          <div className="flex max-w-4xl mx-auto my-8 justify-center">
+            <img
+              src="https://theme.zdassets.com/theme_assets/2078614/82ac03808ea5074dffd64685ecb1572b7902dfc8.png"
+              alt="Company Logo"
+              width={150}
+            />
+          </div>
 
-        <div className="max-w-4xl mx-auto bg-background rounded-xl shadow-lg p-6">
-          <CheckoutStepper steps={steps} currentStep={currentStep} />
-          <div className="flex justify-center">
-            {isLoading ? <div>Loading...</div> : renderStep()}
+          <div className="max-w-4xl mx-auto bg-background rounded-xl shadow-lg p-6">
+            <CheckoutStepper steps={steps} currentStep={currentStep} />
+            <div className="flex justify-center">
+              {renderStep()}
+            </div>
+          </div>
+
+          <div className="flex max-w-4xl mx-auto my-6 justify-center">
+            <span className="text-slate-700">Powered by Capture Health</span>
           </div>
         </div>
-
-        <div className="flex max-w-4xl mx-auto my-6 justify-center">
-          <span className="text-slate-700">Powered by Capture Health</span>
-        </div>
-      </div>
+      )}
       <Toaster />
     </ThemeProvider>
   );
