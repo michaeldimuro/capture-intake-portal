@@ -67,6 +67,10 @@ function App() {
     setFormData((prev) => ({ ...prev, offeringId: offeringId }));
   }, [offeringId])
 
+  useEffect(() => {
+    console.log("Form Data: ", formData)
+  }, [formData])
+
   const fetchConfig = async (offeringId: string) => {
     try {
       const config = await fetch(
