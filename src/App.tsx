@@ -34,8 +34,6 @@ const steps = [
   },
 ];
 
-const stripePublishableKey = 'pk_test_51Pr9I8P9FTx6jjDplhrzT6ggqFpVQwsGsNtu9BLXlOZ4AFjqiZUqrAiElgW1H0NSMjBpyBQ4QHIsnWgCJRXCcDUm00TOJB1lpY'
-
 function App() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,6 +41,7 @@ function App() {
   const [product, setProduct] = useState<Product | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [offeringId, setOfferingId] = useState<string | null>(null);
+  const [publishableKey, setPublishableKey] = useState<string | null>(null)
 
   const [formData, setFormData] = useState({
     offeringId: offeringId,
@@ -77,11 +76,12 @@ function App() {
         `${import.meta.env.VITE_API_BASE_URL}/intake/settings/${offeringId}`
       ).then((res) => res.json());
 
-      const { company, offering, questions } = config;
+      const { company, offering, questions, publishableKey } = config;
 
       setCompany(company);
       setProduct(offering);
       setQuestions(questions);
+      setPublishableKey(publishableKey)
     } catch (error) {
       console.error('Error fetching config:', error);
       toast.error('Failed to load configuration');
@@ -138,7 +138,7 @@ function App() {
           <PaymentForm 
             onSubmit={handlePaymentSubmit} 
             shippingDetails={formData.shipping!}
-            stripePublishableKey={stripePublishableKey}
+            stripePublishableKey={publishableKey!}
           />
         );
       case 4:
