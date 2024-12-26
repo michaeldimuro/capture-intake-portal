@@ -41,7 +41,8 @@ function App() {
   const [product, setProduct] = useState<Product | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [offeringId, setOfferingId] = useState<string | null>(null);
-  const [publishableKey, setPublishableKey] = useState<string | null>(null)
+  const [publishableKey, setPublishableKey] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<any>(null);
 
   const [formData, setFormData] = useState({
     offeringId: offeringId,
@@ -54,37 +55,45 @@ function App() {
   const params = new URLSearchParams(window.location.search);
 
   useEffect(() => {
-    const oid = params.get('oid');
+    const oid = params.get("oid");
     if (!oid) {
-      window.location.href = 'https://capturehealth.io';
+      window.location.href = "https://capturehealth.io";
     } else {
       setOfferingId(oid);
     }
-  }, [params])
+  }, [params]);
 
   useEffect(() => {
     setFormData((prev) => ({ ...prev, offeringId: offeringId }));
-  }, [offeringId])
+  }, [offeringId]);
 
   useEffect(() => {
-    console.log("Form Data: ", formData)
-  }, [formData])
+    console.log("Form Data: ", formData);
+  }, [formData]);
 
   const fetchConfig = async (offeringId: string) => {
     try {
       const config = await fetch(
         `${import.meta.env.VITE_API_BASE_URL}/intake/settings/${offeringId}`
-      ).then((res) => res.json());
+      )
+        .then((res) => {
+          if (res.ok) {
+            return res.json()
+          } else {
+            setApiError(true)
+          }
+        })
+        .catch((e) => setApiError(true));
 
       const { company, offering, questions, publishableKey } = config;
 
       setCompany(company);
       setProduct(offering);
       setQuestions(questions);
-      setPublishableKey(publishableKey)
+      setPublishableKey(publishableKey);
     } catch (error) {
-      console.error('Error fetching config:', error);
-      toast.error('Failed to load configuration');
+      console.error("Error fetching config:", error);
+      toast.error("Failed to load configuration");
     } finally {
       setIsLoading(false);
     }
@@ -135,8 +144,8 @@ function App() {
         return <ShippingForm onSubmit={handleShippingSubmit} />;
       case 3:
         return (
-          <PaymentForm 
-            onSubmit={handlePaymentSubmit} 
+          <PaymentForm
+            onSubmit={handlePaymentSubmit}
             shippingDetails={formData.shipping!}
             stripePublishableKey={publishableKey!}
           />
@@ -157,21 +166,26 @@ function App() {
     <ThemeProvider>
       {isLoading ? (
         <LoadingScreen />
+      ) : apiError ? (
+        <div className="min-h-screen bg-gray-50/50 p-4 md:p-8">
+          <div className="flex max-w-4xl mx-auto my-8 justify-center">
+            <h2>An error occurred</h2>
+          </div>
+        </div>
       ) : (
         <div className="min-h-screen bg-gray-50/50 p-4 md:p-8">
           <div className="flex max-w-4xl mx-auto my-8 justify-center">
             <img
-              src="https://theme.zdassets.com/theme_assets/2078614/82ac03808ea5074dffd64685ecb1572b7902dfc8.png"
+              // src="https://theme.zdassets.com/theme_assets/2078614/82ac03808ea5074dffd64685ecb1572b7902dfc8.png"
+              src="https://capture-health-media-prod.s3.us-east-1.amazonaws.com/Assets/hard_logo_slogan.png"
               alt="Company Logo"
-              width={150}
+              width={240}
             />
           </div>
 
           <div className="max-w-4xl mx-auto bg-background rounded-xl shadow-lg p-6">
             <CheckoutStepper steps={steps} currentStep={currentStep} />
-            <div className="flex justify-center">
-              {renderStep()}
-            </div>
+            <div className="flex justify-center">{renderStep()}</div>
           </div>
 
           <div className="flex max-w-4xl mx-auto my-6 justify-center">
