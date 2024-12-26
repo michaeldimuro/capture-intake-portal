@@ -7,6 +7,7 @@ import { ShippingForm } from "@/components/checkout/ShippingForm";
 import { PaymentForm } from "@/components/checkout/PaymentForm";
 import { Questionnaire } from "@/components/checkout/Questionnaire";
 import { LoadingScreen } from "@/components/loading-screen";
+import { ErrorPage } from "@/components/error-page";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Product, Question } from "./lib/types";
@@ -94,6 +95,7 @@ function App() {
     } catch (error) {
       console.error("Error fetching config:", error);
       toast.error("Failed to load configuration");
+      setApiError(true);
     } finally {
       setIsLoading(false);
     }
@@ -162,37 +164,42 @@ function App() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <ThemeProvider>
+        <LoadingScreen />
+      </ThemeProvider>
+    );
+  }
+
+  if (apiError) {
+    return (
+      <ThemeProvider>
+        <ErrorPage />
+      </ThemeProvider>
+    );
+  }
+
   return (
     <ThemeProvider>
-      {isLoading ? (
-        <LoadingScreen />
-      ) : apiError ? (
-        <div className="min-h-screen bg-gray-50/50 p-4 md:p-8">
-          <div className="flex max-w-4xl mx-auto my-8 justify-center">
-            <h2>An error occurred</h2>
-          </div>
+      <div className="min-h-screen bg-gray-50/50 p-4 md:p-8">
+        <div className="flex max-w-4xl mx-auto my-8 justify-center">
+          <img
+            src="https://capture-health-media-prod.s3.us-east-1.amazonaws.com/Assets/hard_logo_slogan.png"
+            alt="Company Logo"
+            width={240}
+          />
         </div>
-      ) : (
-        <div className="min-h-screen bg-gray-50/50 p-4 md:p-8">
-          <div className="flex max-w-4xl mx-auto my-8 justify-center">
-            <img
-              // src="https://theme.zdassets.com/theme_assets/2078614/82ac03808ea5074dffd64685ecb1572b7902dfc8.png"
-              src="https://capture-health-media-prod.s3.us-east-1.amazonaws.com/Assets/hard_logo_slogan.png"
-              alt="Company Logo"
-              width={240}
-            />
-          </div>
 
-          <div className="max-w-4xl mx-auto bg-background rounded-xl shadow-lg p-6">
-            <CheckoutStepper steps={steps} currentStep={currentStep} />
-            <div className="flex justify-center">{renderStep()}</div>
-          </div>
-
-          <div className="flex max-w-4xl mx-auto my-6 justify-center">
-            <span className="text-slate-700">Powered by Capture Health</span>
-          </div>
+        <div className="max-w-4xl mx-auto bg-background rounded-xl shadow-lg p-6">
+          <CheckoutStepper steps={steps} currentStep={currentStep} />
+          <div className="flex justify-center">{renderStep()}</div>
         </div>
-      )}
+
+        <div className="flex max-w-4xl mx-auto my-6 justify-center">
+          <span className="text-slate-700">Powered by Capture Health</span>
+        </div>
+      </div>
       <Toaster />
     </ThemeProvider>
   );
