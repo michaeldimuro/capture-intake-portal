@@ -41,12 +41,12 @@ function App() {
   const [company, setCompany] = useState<any | null>(null);
   const [product, setProduct] = useState<Product | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [offeringId, setOfferingId] = useState<string | null>(null);
+  const [sessionKey, setSessionKey] = useState<string | null>(null);
   const [publishableKey, setPublishableKey] = useState<string | null>(null);
   const [apiError, setApiError] = useState<any>(null);
 
   const [formData, setFormData] = useState({
-    offeringId: offeringId,
+    offeringId: null,
     customer: null,
     shipping: null,
     payment: null,
@@ -56,32 +56,32 @@ function App() {
   const params = new URLSearchParams(window.location.search);
 
   useEffect(() => {
-    const oid = params.get("oid");
-    if (!oid) {
+    const session = params.get("session");
+    if (!session) {
       window.location.href = "https://capturehealth.io";
     } else {
-      setOfferingId(oid);
+      setSessionKey(session);
     }
   }, [params]);
 
   useEffect(() => {
-    setFormData((prev) => ({ ...prev, offeringId: offeringId }));
-  }, [offeringId]);
+    setFormData((prev) => ({ ...prev}));
+  }, [sessionKey]);
 
   useEffect(() => {
     console.log("Form Data: ", formData);
   }, [formData]);
 
-  const fetchConfig = async (offeringId: string) => {
+  const fetchConfig = async (sessionKey: string) => {
     try {
       const config = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/intake/settings/${offeringId}`
+        `${import.meta.env.VITE_API_BASE_URL}/intake/session?session=${sessionKey}`
       )
         .then((res) => {
           if (res.ok) {
-            return res.json()
+            return res.json();
           } else {
-            setApiError(true)
+            setApiError(true);
           }
         })
         .catch((e) => setApiError(true));
@@ -102,10 +102,10 @@ function App() {
   };
 
   useEffect(() => {
-    if (offeringId) {
-      fetchConfig(offeringId);
+    if (sessionKey) {
+      fetchConfig(sessionKey);
     }
-  }, [offeringId]);
+  }, [sessionKey]);
 
   const handleProductConfirm = () => setCurrentStep(1);
 
@@ -183,13 +183,16 @@ function App() {
   return (
     <ThemeProvider>
       <div className="min-h-screen bg-gray-50/50 p-4 md:p-8">
-        <div className="flex max-w-4xl mx-auto my-8 justify-center">
-          <img
-            src="https://capture-health-media-prod.s3.us-east-1.amazonaws.com/Assets/hard_logo_slogan.png"
-            alt="Company Logo"
-            width={240}
-          />
-        </div>
+
+        {company?.logo && (
+          <div className="flex max-w-4xl mx-auto my-8 justify-center">
+            <img
+              src="https://capture-health-media-prod.s3.us-east-1.amazonaws.com/Assets/hard_logo_slogan.png"
+              alt="Company Logo"
+              width={240}
+            />
+          </div>
+        )}
 
         <div className="max-w-4xl mx-auto bg-background rounded-xl shadow-lg p-6">
           <CheckoutStepper steps={steps} currentStep={currentStep} />

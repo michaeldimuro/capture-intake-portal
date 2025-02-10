@@ -18,7 +18,8 @@ export function ProductConfirmation({ product, onConfirm }: ProductConfirmationP
         <div className="flex items-center space-x-4">
           <div className="relative h-24 w-24 overflow-hidden rounded-lg">
             <Image
-              src={product.image}
+              // src={product.image}
+              src={`https://capture-health-media-prod.s3.us-east-1.amazonaws.com/Assets/swipe3.jpg`}
               alt={product.name}
               className="object-cover"
               fill
