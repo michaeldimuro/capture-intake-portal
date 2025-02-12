@@ -117,8 +117,11 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
                 )}
                 <FormControl>
                   <RadioGroup
-                    onValueChange={(value) => handleAnswer(question.partnerQuestionnaireQuestionId, value)}
-                    defaultValue={answers[question.partnerQuestionnaireQuestionId]}
+                    onValueChange={(value) => {
+                      handleAnswer(question.partnerQuestionnaireQuestionId, value);
+                      form.setValue(question.partnerQuestionnaireQuestionId, value);
+                    }}
+                    value={answers[question.partnerQuestionnaireQuestionId] || ''}
                     className="space-y-2"
                   >
                     {question.options.map((option) => {
@@ -178,6 +181,7 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
                                 ? [...currentAnswers, option.option]
                                 : currentAnswers.filter((a: string) => a !== option.option);
                               handleAnswer(question.partnerQuestionnaireQuestionId, newAnswers);
+                              form.setValue(question.partnerQuestionnaireQuestionId, newAnswers);
                             }}
                             className={isSelected ? "border-primary bg-primary text-primary-foreground" : "border-input bg-background"}
                           />
@@ -214,7 +218,10 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
                     {...field}
                     value={answers[question.partnerQuestionnaireQuestionId] || ''}
                     placeholder={question.placeholder || ''}
-                    onChange={(e) => handleAnswer(question.partnerQuestionnaireQuestionId, e.target.value)}
+                    onChange={(e) => {
+                      handleAnswer(question.partnerQuestionnaireQuestionId, e.target.value);
+                      form.setValue(question.partnerQuestionnaireQuestionId, e.target.value);
+                    }}
                   />
                 </FormControl>
                 <FormMessage />

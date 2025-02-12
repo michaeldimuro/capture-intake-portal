@@ -56,7 +56,7 @@ function App() {
   const params = new URLSearchParams(window.location.search);
 
   useEffect(() => {
-    const session = params.get("session");
+    const session = params.get("sid");
     if (!session) {
       window.location.href = "https://capturehealth.io";
     } else {
@@ -86,11 +86,11 @@ function App() {
         })
         .catch((e) => setApiError(true));
 
-      const { company, offering, questions, publishableKey } = config;
+      const { company, offering, questionnaire, publishableKey } = config;
 
       setCompany(company);
       setProduct(offering);
-      setQuestions(questions);
+      setQuestions(questionnaire?.questions);
       setPublishableKey(publishableKey);
     } catch (error) {
       console.error("Error fetching config:", error);
@@ -149,7 +149,8 @@ function App() {
           <PaymentForm
             onSubmit={handlePaymentSubmit}
             shippingDetails={formData.shipping!}
-            stripePublishableKey={publishableKey!}
+            authNetLoginId={"7dqFfZn29Lsv"} //{company?.authNetLoginId!}
+            authNetClientKey={"5g3Bev94ffaBXwy6BZzYHdGXJuWCc4u7MRH5f2VNhTALS2Zy58h4eTsHy6gzAj9c"}  //{company?.authNetClientKey!}
           />
         );
       case 4:

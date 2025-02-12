@@ -16,29 +16,37 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreditCard } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState, useEffect } from "react";
-import {
-  Elements,
-  CardElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import { toast } from "sonner";
+
+
+declare const Accept: any;
 
 interface PaymentFormProps {
   onSubmit: (data: PaymentDetails) => void;
   shippingDetails: ShippingDetails;
-  stripePublishableKey: string;
+  authNetLoginId: string;
+  authNetClientKey: string;
 }
 
 export function PaymentForm({
   onSubmit,
   shippingDetails,
-  stripePublishableKey,
+  authNetLoginId,
+  authNetClientKey,
 }: PaymentFormProps) {
   const [sameAsShipping, setSameAsShipping] = useState(true);
 
-  // Load your Stripe publishable key
-  const stripePromise = loadStripe(stripePublishableKey);
+  useEffect(() => {
+    const script = document.createElement('script');
+    // script.src = 'https://js.authorize.net/v1/Accept.js'; // Production
+    script.src = "https://jstest.authorize.net/v1/Accept.js" // Sandbox
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const formSchema = z.object({
     nameOnCard: z.string().min(2, "Name on card is required"),
@@ -79,7 +87,6 @@ export function PaymentForm({
   const form = useForm<PaymentDetails>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      // nameOnCard: 'Michael DiMuro',
       sameAsShipping: true,
       billingAddress1: shippingDetails?.address1,
       billingAddress2: shippingDetails?.address2,
@@ -112,26 +119,26 @@ export function PaymentForm({
   }, [sameAsShipping, shippingDetails, form]);
 
   return (
-    <Elements stripe={stripePromise}>
-      <Card className="w-full max-w-2xl">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CreditCard className="h-5 w-5" />
-            Payment Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <PaymentFormInner
-              form={form}
-              sameAsShipping={sameAsShipping}
-              setSameAsShipping={setSameAsShipping}
-              onSubmit={onSubmit}
-            />
-          </Form>
-        </CardContent>
-      </Card>
-    </Elements>
+    <Card className="w-full max-w-2xl">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <CreditCard className="h-5 w-5" />
+          Payment Information
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <PaymentFormInner
+            form={form}
+            sameAsShipping={sameAsShipping}
+            setSameAsShipping={setSameAsShipping}
+            onSubmit={onSubmit}
+            authNetLoginId={authNetLoginId}
+            authNetClientKey={authNetClientKey}
+          />
+        </Form>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -140,64 +147,43 @@ function PaymentFormInner({
   sameAsShipping,
   setSameAsShipping,
   onSubmit,
+  authNetLoginId,
+  authNetClientKey,
 }: any) {
-  const stripe = useStripe();
-  const elements = useElements();
-
-  const cardElementOptions = {
-    disableLink: true,
-    hidePostalCode: true,
-    style: {
-      base: {
-        color: "#333333",
-        fontSize: "1em",
-        fontFamily: "'Roboto', sans-serif",
-        "::placeholder": {
-          color: "#888888",
-        },
-        padding: "10px",
-      },
-      invalid: {
-        color: "#ff5252",
-      },
-    },
-  };
-
-  const handleSubmit = async () => {
-    if (!stripe || !elements) {
+  const handleSubmit = async (formData: any) => {
+    if (typeof Accept === 'undefined') {
+      console.error('Authorize.Net Accept.js is not loaded');
       return;
     }
 
-    const cardElement = elements.getElement(CardElement);
-
-    if (!cardElement) {
-      console.error("Card Element not found");
-      return;
-    }
-
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement,
-      billing_details: {
-        name: form.getValues("nameOnCard"),
-        address: {
-          line1: form.getValues("billingAddress1"),
-          city: form.getValues("billingCity"),
-          state: form.getValues("billingState"),
-          postal_code: form.getValues("billingZipCode"),
-          country: form.getValues("billingCountry"),
-        },
+    const secureData = {
+      authData: {
+        clientKey: authNetClientKey,
+        apiLoginID: authNetLoginId
       },
-    });
+      cardData: {
+        cardNumber: (document.getElementById('cardNumber') as HTMLInputElement)?.value,
+        month: (document.getElementById('expiryMonth') as HTMLInputElement)?.value,
+        year: (document.getElementById('expiryYear') as HTMLInputElement)?.value,
+        cardCode: (document.getElementById('cvv') as HTMLInputElement)?.value
+      }
+    };
 
-    if (error) {
-      console.error("Error creating payment method:", error.message);
-    } else {
-      console.log("Payment Method Created:", paymentMethod);
-      onSubmit({
-        ...form.getValues(),
-        paymentMethodId: paymentMethod.id, // Send to backend
-      });
+    Accept.dispatchData(secureData, responseHandler);
+
+    function responseHandler(response: any) {
+      if (response.messages.resultCode === 'Error') {
+        console.error('Error creating payment token:', response.messages.message);
+        toast.error(response.messages.message[0].text);
+        // Add error handling here - maybe show a toast or error message to user
+      } else {
+        const opaqueData = response.opaqueData;
+        onSubmit({
+          ...formData,
+          paymentMethodId: opaqueData.dataValue,
+          paymentDescriptor: opaqueData.dataDescriptor
+        });
+      }
     }
   };
 
@@ -216,12 +202,59 @@ function PaymentFormInner({
           </FormItem>
         )}
       />
-       <div>
-        <FormLabel>Card Details</FormLabel>
-        <div className="p-2 border rounded-md">
-          <CardElement options={cardElementOptions}/>
+      
+      <div className="space-y-4">
+        <FormItem>
+          <FormLabel>Card Number</FormLabel>
+          <FormControl>
+            <Input
+              id="cardNumber"
+              type="text"
+              placeholder="1234 5678 9012 3456"
+              maxLength={16}
+            />
+          </FormControl>
+        </FormItem>
+
+        <div className="grid grid-cols-3 gap-4">
+          <FormItem>
+            <FormLabel>Expiry Month</FormLabel>
+            <FormControl>
+              <Input
+                id="expiryMonth"
+                type="text"
+                placeholder="MM"
+                maxLength={2}
+              />
+            </FormControl>
+          </FormItem>
+          
+          <FormItem>
+            <FormLabel>Expiry Year</FormLabel>
+            <FormControl>
+              <Input
+                id="expiryYear"
+                type="text"
+                placeholder="YYYY"
+                maxLength={4}
+              />
+            </FormControl>
+          </FormItem>
+
+          <FormItem>
+            <FormLabel>CVV</FormLabel>
+            <FormControl>
+              <Input
+                id="cvv"
+                type="text"
+                placeholder="123"
+                maxLength={4}
+              />
+            </FormControl>
+          </FormItem>
         </div>
       </div>
+
       <FormField
         control={form.control}
         name="sameAsShipping"
