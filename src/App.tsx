@@ -6,6 +6,7 @@ import { CustomerForm } from "@/components/checkout/CustomerForm";
 import { ShippingForm } from "@/components/checkout/ShippingForm";
 import { PaymentForm } from "@/components/checkout/PaymentForm";
 import { Questionnaire } from "@/components/checkout/Questionnaire";
+import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { LoadingScreen } from "@/components/loading-screen";
 import { ErrorPage } from "@/components/error-page";
 import { Toaster } from "@/components/ui/sonner";
@@ -38,6 +39,8 @@ const steps = [
 function App() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showingSummary, setShowingSummary] = useState(false);
   const [company, setCompany] = useState<any | null>(null);
   const [product, setProduct] = useState<Product | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -92,6 +95,8 @@ function App() {
       setProduct(offering);
       setQuestions(questionnaire?.questions);
       setPublishableKey(publishableKey);
+
+      setFormData((prev) => ({ ...prev, offeringId: offering?.variant?.id }));
     } catch (error) {
       console.error("Error fetching config:", error);
       toast.error("Failed to load configuration");
@@ -126,12 +131,60 @@ function App() {
 
   const handleQuestionnaireSubmit = (data: any) => {
     setFormData((prev) => ({ ...prev, questionnaire: data }));
-    toast.success("Order completed successfully!", {
-      description: "Thank you for your purchase.",
-    });
+    setShowingSummary(true);
+  };
+
+  const handlePlaceOrder = async () => {
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/intake/process`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sessionKey,
+          ...formData,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit order');
+      }
+
+      toast.success("Order completed successfully!", {
+        description: "Thank you for your purchase. We'll be in touch soon.",
+      });
+
+      // Redirect to success page after showing the success message
+      setTimeout(() => {
+        window.location.href = "https://capturehealth.io/success";
+      }, 3000);
+
+    } catch (error) {
+      console.error('Submission error:', error);
+      toast.error("Failed to complete order", {
+        description: "Please try again or contact support if the problem persists.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const renderStep = () => {
+    if (showingSummary) {
+      return (
+        <OrderSummary
+          product={product as Product}
+          customer={formData.customer!}
+          shipping={formData.shipping!}
+          onSubmit={handlePlaceOrder}
+          isSubmitting={isSubmitting}
+        />
+      );
+    }
+
     switch (currentStep) {
       case 0:
         return (
@@ -184,7 +237,6 @@ function App() {
   return (
     <ThemeProvider>
       <div className="min-h-screen bg-gray-50/50 p-4 md:p-8">
-
         {company?.logo && (
           <div className="flex max-w-4xl mx-auto my-8 justify-center">
             <img
@@ -196,7 +248,10 @@ function App() {
         )}
 
         <div className="max-w-4xl mx-auto bg-background rounded-xl shadow-lg p-6">
-          <CheckoutStepper steps={steps} currentStep={currentStep} />
+          <CheckoutStepper 
+            steps={steps} 
+            currentStep={showingSummary ? steps.length : currentStep} 
+          />
           <div className="flex justify-center">{renderStep()}</div>
         </div>
 
