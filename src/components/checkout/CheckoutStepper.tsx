@@ -29,7 +29,6 @@ export function CheckoutStepper({
               key={step.title}
               className={cn(
                 'flex flex-col items-center relative flex-1',
-                // index !== steps.length - 1 && 'flex-1'
               )}
             >
               {/* Progress Line */}
@@ -70,7 +69,7 @@ export function CheckoutStepper({
                 >
                   {step.title}
                 </div>
-                <div className="text-xs text-muted-foreground mt-1">
+                <div className="text-xs text-muted-foreground mt-1 hidden md:block">
                   {step.description}
                 </div>
               </div>
