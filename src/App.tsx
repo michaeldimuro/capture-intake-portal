@@ -78,7 +78,7 @@ function App() {
   const fetchConfig = async (sessionKey: string) => {
     try {
       const config = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/intake/session?session=${sessionKey}`
+        `${import.meta.env.VITE_API_BASE_URL}/intake/session?sid=${sessionKey}`
       )
         .then((res) => {
           if (res.ok) {
