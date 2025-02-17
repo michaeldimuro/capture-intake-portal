@@ -32,6 +32,18 @@ interface PaymentFormProps {
   authNetCredentials: string;
 }
 
+// Decrypt credentials only when needed
+const getDecryptedCredentials = async (authNetCredentials: string): Promise<AuthNetCredentials> => {
+  try {
+    console.log("AuthNetCredentials", authNetCredentials);
+    return JSON.parse(await decrypt(authNetCredentials));
+  } catch (error) {
+    console.error('Error decrypting credentials');
+    toast.error("Payment system configuration error");
+    throw new Error('Failed to initialize payment system');
+  }
+};
+
 export function PaymentForm({
   onSubmit,
   shippingDetails,
@@ -39,17 +51,6 @@ export function PaymentForm({
 }: PaymentFormProps) {
   const [sameAsShipping, setSameAsShipping] = useState(true);
   const [cardLastFour, setCardLastFour] = useState<string>("");
-
-  // Decrypt credentials only when needed
-  const getDecryptedCredentials = (): AuthNetCredentials => {
-    try {
-      return JSON.parse(decrypt(authNetCredentials));
-    } catch (error) {
-      console.error('Error decrypting credentials');
-      toast.error("Payment system configuration error");
-      throw new Error('Failed to initialize payment system');
-    }
-  };
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -150,8 +151,7 @@ export function PaymentForm({
             sameAsShipping={sameAsShipping}
             setSameAsShipping={setSameAsShipping}
             onSubmit={onSubmit}
-            authNetLoginId={getDecryptedCredentials().apiLoginId}
-            authNetClientKey={getDecryptedCredentials().clientKey}
+            authNetCredentials={authNetCredentials}
             setCardLastFour={setCardLastFour}
           />
         </Form>
@@ -165,8 +165,7 @@ interface PaymentFormInnerProps {
   sameAsShipping: boolean;
   setSameAsShipping: (value: boolean) => void;
   onSubmit: (data: PaymentDetails) => void;
-  authNetLoginId: string;
-  authNetClientKey: string;
+  authNetCredentials: string;
   setCardLastFour: (value: string) => void;
 }
 
@@ -175,8 +174,7 @@ function PaymentFormInner({
   sameAsShipping,
   setSameAsShipping,
   onSubmit,
-  authNetLoginId,
-  authNetClientKey,
+  authNetCredentials,
   setCardLastFour,
 }: PaymentFormInnerProps) {
   const handleSubmit = async (formData: any) => {
@@ -194,11 +192,12 @@ function PaymentFormInner({
     // Capture last 4 digits before sending to Authorize.net
     const lastFour = cardNumber.slice(-4);
     setCardLastFour(lastFour);
+    const { apiLoginId, clientKey } = await getDecryptedCredentials(authNetCredentials);
 
     const secureData = {
       authData: {
-        clientKey: authNetClientKey,
-        apiLoginID: authNetLoginId
+        clientKey: clientKey,
+        apiLoginID: apiLoginId
       },
       cardData: {
         cardNumber,
