@@ -71,9 +71,10 @@ function App() {
     setFormData((prev) => ({ ...prev}));
   }, [sessionKey]);
 
-  useEffect(() => {
-    console.log("Form Data: ", formData);
-  }, [formData]);
+  // DEBUG
+  // useEffect(() => {
+  //   console.log("Form Data: ", formData);
+  // }, [formData]);
 
   const fetchConfig = async (sessionKey: string) => {
     try {

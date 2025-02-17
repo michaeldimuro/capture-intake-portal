@@ -35,7 +35,6 @@ interface PaymentFormProps {
 // Decrypt credentials only when needed
 const getDecryptedCredentials = async (authNetCredentials: string): Promise<AuthNetCredentials> => {
   try {
-    console.log("AuthNetCredentials", authNetCredentials);
     return JSON.parse(await decrypt(authNetCredentials));
   } catch (error) {
     console.error('Error decrypting credentials');
