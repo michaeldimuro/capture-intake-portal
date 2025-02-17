@@ -17,30 +17,50 @@ import { CreditCard } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { decrypt } from "@/lib/utils";
 
 declare const Accept: any;
+
+interface AuthNetCredentials {
+  apiLoginId: string;
+  clientKey: string;
+}
 
 interface PaymentFormProps {
   onSubmit: (data: PaymentDetails) => void;
   shippingDetails: ShippingDetails;
-  authNetLoginId: string;
-  authNetClientKey: string;
+  authNetCredentials: string;
 }
 
 export function PaymentForm({
   onSubmit,
   shippingDetails,
-  authNetLoginId,
-  authNetClientKey,
+  authNetCredentials
 }: PaymentFormProps) {
   const [sameAsShipping, setSameAsShipping] = useState(true);
   const [cardLastFour, setCardLastFour] = useState<string>("");
 
+  // Decrypt credentials only when needed
+  const getDecryptedCredentials = (): AuthNetCredentials => {
+    try {
+      return JSON.parse(decrypt(authNetCredentials));
+    } catch (error) {
+      console.error('Error decrypting credentials');
+      toast.error("Payment system configuration error");
+      throw new Error('Failed to initialize payment system');
+    }
+  };
+
   useEffect(() => {
     const script = document.createElement('script');
-    // script.src = 'https://js.authorize.net/v1/Accept.js'; // Production
-    script.src = "https://jstest.authorize.net/v1/Accept.js"; // Sandbox
+    // Always use HTTPS for payment-related scripts
+    script.src = import.meta.env.PROD 
+      ? 'https://js.authorize.net/v1/Accept.js'
+      : "https://jstest.authorize.net/v1/Accept.js";
     script.async = true;
+    script.onerror = () => {
+      toast.error("Failed to load payment system");
+    };
     document.body.appendChild(script);
 
     return () => {
@@ -130,14 +150,24 @@ export function PaymentForm({
             sameAsShipping={sameAsShipping}
             setSameAsShipping={setSameAsShipping}
             onSubmit={onSubmit}
-            authNetLoginId={authNetLoginId}
-            authNetClientKey={authNetClientKey}
+            authNetLoginId={getDecryptedCredentials().apiLoginId}
+            authNetClientKey={getDecryptedCredentials().clientKey}
             setCardLastFour={setCardLastFour}
           />
         </Form>
       </CardContent>
     </Card>
   );
+}
+
+interface PaymentFormInnerProps {
+  form: any;
+  sameAsShipping: boolean;
+  setSameAsShipping: (value: boolean) => void;
+  onSubmit: (data: PaymentDetails) => void;
+  authNetLoginId: string;
+  authNetClientKey: string;
+  setCardLastFour: (value: string) => void;
 }
 
 function PaymentFormInner({
@@ -148,14 +178,19 @@ function PaymentFormInner({
   authNetLoginId,
   authNetClientKey,
   setCardLastFour,
-}: any) {
+}: PaymentFormInnerProps) {
   const handleSubmit = async (formData: any) => {
     if (typeof Accept === 'undefined') {
-      console.error('Authorize.Net Accept.js is not loaded');
+      toast.error('Payment system not initialized');
       return;
     }
 
     const cardNumber = (document.getElementById('cardNumber') as HTMLInputElement)?.value;
+    if (!cardNumber) {
+      toast.error('Please enter card number');
+      return;
+    }
+
     // Capture last 4 digits before sending to Authorize.net
     const lastFour = cardNumber.slice(-4);
     setCardLastFour(lastFour);
@@ -173,21 +208,28 @@ function PaymentFormInner({
       }
     };
 
-    Accept.dispatchData(secureData, responseHandler);
+    try {
+      Accept.dispatchData(secureData, responseHandler);
+    } catch (error) {
+      toast.error('Payment processing error');
+      console.error('Accept.js error:', error);
+    }
 
     function responseHandler(response: any) {
       if (response.messages.resultCode === 'Error') {
-        console.error('Error creating payment token:', response.messages.message);
-        toast.error(response.messages.message[0].text);
-      } else {
-        const opaqueData = response.opaqueData;
-        onSubmit({
-          ...formData,
-          paymentMethodId: opaqueData.dataValue,
-          paymentDescriptor: opaqueData.dataDescriptor,
-          cardLastFour: lastFour // Include last 4 digits in the submission
-        });
+        const errorMessage = response.messages.message[0].text;
+        console.error('Error creating payment token:', errorMessage);
+        toast.error(errorMessage);
+        return;
       }
+
+      const opaqueData = response.opaqueData;
+      onSubmit({
+        ...formData,
+        paymentMethodId: opaqueData.dataValue,
+        paymentDescriptor: opaqueData.dataDescriptor,
+        cardLastFour: lastFour
+      });
     }
   };
 

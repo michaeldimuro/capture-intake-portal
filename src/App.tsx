@@ -45,7 +45,7 @@ function App() {
   const [product, setProduct] = useState<Product | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [sessionKey, setSessionKey] = useState<string | null>(null);
-  const [publishableKey, setPublishableKey] = useState<string | null>(null);
+  const [authNetCredentials, setAuthNetCredentials] = useState<string | null>(null);
   const [apiError, setApiError] = useState<any>(null);
 
   const [formData, setFormData] = useState({
@@ -89,12 +89,12 @@ function App() {
         })
         .catch((e) => setApiError(true));
 
-      const { company, offering, questionnaire, publishableKey } = config;
+      const { company, offering, questionnaire, authNetCredentials } = config;
 
       setCompany(company);
       setProduct(offering);
       setQuestions(questionnaire?.questions);
-      setPublishableKey(publishableKey);
+      setAuthNetCredentials(authNetCredentials);
 
       setFormData((prev) => ({ ...prev, offeringId: offering?.variant?.id }));
     } catch (error) {
@@ -202,8 +202,7 @@ function App() {
           <PaymentForm
             onSubmit={handlePaymentSubmit}
             shippingDetails={formData.shipping!}
-            authNetLoginId={"7dqFfZn29Lsv"} //{company?.authNetLoginId!}
-            authNetClientKey={"5g3Bev94ffaBXwy6BZzYHdGXJuWCc4u7MRH5f2VNhTALS2Zy58h4eTsHy6gzAj9c"}  //{company?.authNetClientKey!}
+            authNetCredentials={authNetCredentials as string}
           />
         );
       case 4:
