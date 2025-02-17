@@ -18,7 +18,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
-
 declare const Accept: any;
 
 interface PaymentFormProps {
@@ -35,11 +34,12 @@ export function PaymentForm({
   authNetClientKey,
 }: PaymentFormProps) {
   const [sameAsShipping, setSameAsShipping] = useState(true);
+  const [cardLastFour, setCardLastFour] = useState<string>("");
 
   useEffect(() => {
     const script = document.createElement('script');
     // script.src = 'https://js.authorize.net/v1/Accept.js'; // Production
-    script.src = "https://jstest.authorize.net/v1/Accept.js" // Sandbox
+    script.src = "https://jstest.authorize.net/v1/Accept.js"; // Sandbox
     script.async = true;
     document.body.appendChild(script);
 
@@ -99,10 +99,7 @@ export function PaymentForm({
 
   useEffect(() => {
     if (sameAsShipping) {
-      form.setValue(
-        "billingAddress1",
-        shippingDetails?.address1
-      );
+      form.setValue("billingAddress1", shippingDetails?.address1);
       form.setValue("billingAddress2", shippingDetails?.address2);
       form.setValue("billingCity", shippingDetails?.city);
       form.setValue("billingState", shippingDetails?.state);
@@ -135,6 +132,7 @@ export function PaymentForm({
             onSubmit={onSubmit}
             authNetLoginId={authNetLoginId}
             authNetClientKey={authNetClientKey}
+            setCardLastFour={setCardLastFour}
           />
         </Form>
       </CardContent>
@@ -149,6 +147,7 @@ function PaymentFormInner({
   onSubmit,
   authNetLoginId,
   authNetClientKey,
+  setCardLastFour,
 }: any) {
   const handleSubmit = async (formData: any) => {
     if (typeof Accept === 'undefined') {
@@ -156,13 +155,18 @@ function PaymentFormInner({
       return;
     }
 
+    const cardNumber = (document.getElementById('cardNumber') as HTMLInputElement)?.value;
+    // Capture last 4 digits before sending to Authorize.net
+    const lastFour = cardNumber.slice(-4);
+    setCardLastFour(lastFour);
+
     const secureData = {
       authData: {
         clientKey: authNetClientKey,
         apiLoginID: authNetLoginId
       },
       cardData: {
-        cardNumber: (document.getElementById('cardNumber') as HTMLInputElement)?.value,
+        cardNumber,
         month: (document.getElementById('expiryMonth') as HTMLInputElement)?.value,
         year: (document.getElementById('expiryYear') as HTMLInputElement)?.value,
         cardCode: (document.getElementById('cvv') as HTMLInputElement)?.value
@@ -175,13 +179,13 @@ function PaymentFormInner({
       if (response.messages.resultCode === 'Error') {
         console.error('Error creating payment token:', response.messages.message);
         toast.error(response.messages.message[0].text);
-        // Add error handling here - maybe show a toast or error message to user
       } else {
         const opaqueData = response.opaqueData;
         onSubmit({
           ...formData,
           paymentMethodId: opaqueData.dataValue,
-          paymentDescriptor: opaqueData.dataDescriptor
+          paymentDescriptor: opaqueData.dataDescriptor,
+          cardLastFour: lastFour // Include last 4 digits in the submission
         });
       }
     }
@@ -352,7 +356,7 @@ function PaymentFormInner({
                 <FormItem>
                   <FormLabel>Country</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} value="US" disabled />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

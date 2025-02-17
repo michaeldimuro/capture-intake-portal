@@ -37,9 +37,14 @@ export function ShippingForm({ onSubmit }: ShippingFormProps) {
       city: '',
       state: '',
       zipCode: '',
-      country: '',
+      country: 'US',
     },
   });
+
+  const handleSubmit = (data: ShippingDetails) => {
+    // Ensure country is always US
+    onSubmit({ ...data, country: 'US' });
+  };
 
   return (
     <Card className="w-full max-w-2xl">
@@ -51,7 +56,7 @@ export function ShippingForm({ onSubmit }: ShippingFormProps) {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="address1"
@@ -127,7 +132,7 @@ export function ShippingForm({ onSubmit }: ShippingFormProps) {
                   <FormItem>
                     <FormLabel>Country</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} value="US" disabled />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

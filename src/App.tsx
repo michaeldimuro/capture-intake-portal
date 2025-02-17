@@ -157,10 +157,10 @@ function App() {
         description: "Thank you for your purchase. We'll be in touch soon.",
       });
 
-      // Redirect to success page after showing the success message
-      setTimeout(() => {
-        window.location.href = "https://capturehealth.io/success";
-      }, 3000);
+      // OPTIONAL - Redirect to success page after showing the success message
+      // setTimeout(() => {
+      //   window.location.href = "https://capturehealth.io/success";
+      // }, 3000);
 
     } catch (error) {
       console.error('Submission error:', error);
@@ -241,7 +241,7 @@ function App() {
           <div className="flex max-w-4xl mx-auto my-8 justify-center">
             <img
               src="https://capture-health-media-prod.s3.us-east-1.amazonaws.com/Assets/hard_logo_slogan.png"
-              alt="Company Logo"
+              alt={`${company?.name} Logo`}
               width={240}
             />
           </div>
