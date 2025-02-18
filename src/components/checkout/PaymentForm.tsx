@@ -54,9 +54,10 @@ export function PaymentForm({
   useEffect(() => {
     const script = document.createElement('script');
     // Always use HTTPS for payment-related scripts
-    script.src = import.meta.env.PROD 
-      ? 'https://js.authorize.net/v1/Accept.js'
-      : "https://jstest.authorize.net/v1/Accept.js";
+    script.src = 'https://js.authorize.net/v1/Accept.js'
+    // import.meta.env.PROD 
+    //   ? 'https://js.authorize.net/v1/Accept.js'
+    //   : "https://jstest.authorize.net/v1/Accept.js";
     script.async = true;
     script.onerror = () => {
       toast.error("Failed to load payment system");
@@ -192,6 +193,9 @@ function PaymentFormInner({
     const lastFour = cardNumber.slice(-4);
     setCardLastFour(lastFour);
     const { apiLoginId, clientKey } = await getDecryptedCredentials(authNetCredentials);
+
+    console.log("DEBUG >> apiLoginId: ", apiLoginId)
+    console.log("DEBUG >> clientKey: ", clientKey)
 
     const secureData = {
       authData: {
