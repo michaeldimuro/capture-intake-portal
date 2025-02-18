@@ -70,7 +70,7 @@ function App() {
   useEffect(() => {
     setFormData((prev) => ({ ...prev}));
   }, [sessionKey]);
-
+ 
   // DEBUG
   // useEffect(() => {
   //   console.log("Form Data: ", formData);
@@ -162,6 +162,23 @@ function App() {
       // setTimeout(() => {
       //   window.location.href = "https://capturehealth.io/success";
       // }, 3000);
+
+      // Send success message to parent window
+      if (window.parent && window.parent !== window) {
+        try {
+          window.parent.postMessage({
+            type: 'CHECKOUT_COMPLETE',
+            success: true,
+            // data: {
+            //   orderId: response.orderId,
+            //   customerEmail: formData.customer?.email,
+            //   amount: product?.variant?.price
+            // }
+          }, '*');
+        } catch (err) {
+          console.error('Failed to notify parent window:', err);
+        }
+      }
 
     } catch (error) {
       console.error('Submission error:', error);
