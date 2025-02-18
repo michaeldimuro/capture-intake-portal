@@ -19,6 +19,12 @@ export function OrderSummary({
   onSubmit,
   isSubmitting 
 }: OrderSummaryProps) {
+  // Format the date without timezone conversion
+  const formatDate = (dateString: string) => {
+    const [year, month, day] = dateString.split('-');
+    return `${month}/${day}/${year}`;
+  };
+
   return (
     <Card className="w-full max-w-2xl">
       <CardHeader>
@@ -65,7 +71,7 @@ export function OrderSummary({
             </div>
             <div>
               <p className="text-muted-foreground">Date of Birth</p>
-              <p>{new Date(customer.dateOfBirth).toLocaleDateString()}</p>
+              <p>{formatDate(customer.dateOfBirth)}</p>
             </div>
           </div>
         </div>
