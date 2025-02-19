@@ -200,7 +200,20 @@ export function InitialForm({ product, onSubmit }: InitialFormProps) {
           </div>
 
           <div className="p-4 border-t">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-4 bg-muted/50 rounded-lg">
+              <div>
+                <p className="font-medium text-base">Quantity per shipment</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {product.variant.quantity} {product.medicationDosage.form}s ×{" "}
+                  {product.variant.monthSupply} {monthText}
+                </p>
+              </div>
+              <p className="text-xl font-semibold shrink-0">
+                {totalQuantity} units
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between mt-4">
               <div>
                 <p className="font-medium text-base">Subscription Price</p>
                 <p className="text-sm text-muted-foreground mt-1">
