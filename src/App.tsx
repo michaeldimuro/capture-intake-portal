@@ -59,6 +59,7 @@ function App() {
   const [sessionKey, setSessionKey] = useState<string | null>(null);
   const [authNetCredentials, setAuthNetCredentials] = useState<string | null>(null);
   const [apiError, setApiError] = useState<any>(null);
+  const [isOrderComplete, setIsOrderComplete] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
     offeringId: null,
@@ -172,6 +173,8 @@ function App() {
         throw new Error('Failed to submit order');
       }
 
+      setIsOrderComplete(true);
+
       toast.success("Order completed successfully!", {
         description: "Thank you for your purchase. We'll be in touch soon.",
       });
@@ -204,8 +207,10 @@ function App() {
           product={product as Product}
           customer={formData.customer!}
           shipping={formData.shipping!}
+          payment={formData.payment}
           onSubmit={handlePlaceOrder}
           isSubmitting={isSubmitting}
+          isOrderComplete={isOrderComplete}
         />
       );
     }

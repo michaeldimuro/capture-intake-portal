@@ -40,6 +40,7 @@ interface OrderSummaryProps {
   };
   onSubmit: () => void;
   isSubmitting: boolean;
+  isOrderComplete?: boolean;
 }
 
 export function OrderSummary({
@@ -49,6 +50,7 @@ export function OrderSummary({
   payment,
   onSubmit,
   isSubmitting,
+  isOrderComplete = false,
 }: OrderSummaryProps) {
   const formatDate = (dateString: string) => {
     const [year, month, day] = dateString.split("-");
@@ -296,13 +298,15 @@ export function OrderSummary({
           className="w-full h-12 text-base"
           size="lg"
           onClick={onSubmit}
-          disabled={isSubmitting}
+          disabled={isSubmitting || isOrderComplete}
         >
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
               Processing Order...
             </>
+          ) : isOrderComplete ? (
+            "Order Placed Successfully"
           ) : (
             "Place Order"
           )}
