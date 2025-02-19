@@ -267,7 +267,7 @@ function App() {
           </div>
         )}
 
-        <div className="max-w-4xl mx-auto bg-background rounded-xl shadow-lg p-6">
+        <div className="max-w-4xl mx-auto bg-background rounded-xl shadow-lg py-6">
           <CheckoutStepper 
             steps={steps} 
             currentStep={showingSummary ? steps.length : currentStep} 
