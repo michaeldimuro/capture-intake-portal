@@ -1,51 +1,90 @@
-import { Product, CustomerDetails, ShippingDetails } from '@/lib/types';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Loader2, CheckCircle, Package2, Calendar, CreditCard, Info } from 'lucide-react';
-import Image from '@/components/ui/image';
-import { pluralize } from '@/lib/utils';
+import { Product, CustomerDetails, ShippingDetails } from "@/lib/types";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Loader2,
+  Package2,
+  Calendar,
+  CreditCard,
+  Info,
+  MapPin,
+  Building,
+  User,
+  Mail,
+  Phone,
+  CalendarDays,
+  Home,
+} from "lucide-react";
+import Image from "@/components/ui/image";
+import { pluralize } from "@/lib/utils";
 
 interface OrderSummaryProps {
   product: Product;
   customer: CustomerDetails;
   shipping: ShippingDetails;
+  payment?: {
+    cardLastFour: string;
+    sameAsShipping: boolean;
+    billingAddress1?: string;
+    billingAddress2?: string;
+    billingCity?: string;
+    billingState?: string;
+    billingZipCode?: string;
+    billingCountry?: string;
+  };
   onSubmit: () => void;
   isSubmitting: boolean;
 }
 
-export function OrderSummary({ 
-  product, 
-  customer, 
-  shipping, 
+export function OrderSummary({
+  product,
+  customer,
+  shipping,
+  payment,
   onSubmit,
-  isSubmitting 
+  isSubmitting,
 }: OrderSummaryProps) {
   const formatDate = (dateString: string) => {
-    const [year, month, day] = dateString.split('-');
+    const [year, month, day] = dateString.split("-");
     return `${month}/${day}/${year}`;
   };
 
-  const totalQuantity = (product.variant.quantity || 0) * (product.variant.monthSupply || 1);
-  const monthlyPrice = Number(product.variant.price) / (product.variant.monthSupply || 1);
-  const monthText = pluralize(product.variant.monthSupply, 'month', 'months');
+  const totalQuantity =
+    (product.variant.quantity || 0) * (product.variant.monthSupply || 1);
+  const monthlyPrice =
+    Number(product.variant.price) / (product.variant.monthSupply || 1);
+  const monthText = pluralize(product.variant.monthSupply, "month", "months");
 
   return (
     <Card className="w-full max-w-2xl">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-2xl md:text-3xl">
-          <CheckCircle className="h-6 w-6 md:h-7 md:w-7 text-primary" />
+      <CardHeader className="border-b">
+        <CardTitle className="text-2xl md:text-3xl">
           Review Your Order
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-8">
+      <CardContent className="space-y-8 pt-6">
         {/* Prescription Details */}
         <div className="bg-muted/30 rounded-lg overflow-hidden">
           <div className="p-6 border-b">
-            <h3 className="font-semibold text-lg md:text-xl mb-6">Prescription Details</h3>
+            <div className="flex items-center gap-2 mb-6">
+              {/* <Package2 className="h-5 w-5 text-primary" /> */}
+              <h3 className="font-semibold text-lg md:text-xl">
+                Prescription Details
+              </h3>
+            </div>
             <div className="flex flex-col md:flex-row gap-6">
               <div className="relative h-48 md:h-32 w-full md:w-32 flex-shrink-0 overflow-hidden rounded-md">
                 <Image
-                  src={product.image || `https://capture-health-media-prod.s3.us-east-1.amazonaws.com/Assets/swipe3.jpg`}
+                  src={
+                    product.image ||
+                    `https://capture-health-media-prod.s3.us-east-1.amazonaws.com/Assets/swipe3.jpg`
+                  }
                   alt={product.name}
                   className="object-cover"
                   fill
@@ -53,16 +92,23 @@ export function OrderSummary({
               </div>
               <div className="flex-1">
                 <h4 className="text-lg font-medium">{product.name}</h4>
-                <p className="text-muted-foreground mt-2">{product.description}</p>
+                <p className="text-muted-foreground mt-2">
+                  {product.description}
+                </p>
                 <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
-                  <span className="font-medium">{product.medicationDosage.strength} {product.medicationDosage.unit}</span>
+                  <span className="font-medium">
+                    {product.medicationDosage.strength}{" "}
+                    {product.medicationDosage.unit}
+                  </span>
                   <span className="text-muted-foreground">•</span>
-                  <span className="capitalize">{product.medicationDosage.form}</span>
+                  <span className="capitalize">
+                    {product.medicationDosage.form}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
-          
+
           <div className="p-6 grid gap-6 md:grid-cols-2">
             <div className="flex items-start gap-4">
               <Package2 className="h-5 w-5 text-primary mt-1 shrink-0" />
@@ -70,7 +116,8 @@ export function OrderSummary({
                 <p className="font-medium text-base">Quantity per shipment</p>
                 <p className="text-sm text-muted-foreground mt-1">
                   {totalQuantity} {product.medicationDosage.form}s
-                  <br />({product.variant.quantity} units × {product.variant.monthSupply} {monthText})
+                  <br />({product.variant.quantity} units ×{" "}
+                  {product.variant.monthSupply} {monthText})
                 </p>
               </div>
             </div>
@@ -89,49 +136,125 @@ export function OrderSummary({
 
         {/* Customer Information */}
         <div className="space-y-4">
-          <h3 className="font-semibold text-lg">Patient Information</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-base">
-            <div>
-              <p className="text-muted-foreground">Name</p>
-              <p className="mt-1">{customer.firstName} {customer.lastName}</p>
+          <div className="flex items-center gap-2">
+            <h3 className="font-semibold text-lg">Patient Information</h3>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="flex items-center gap-3">
+              <User className="h-5 w-5 text-primary shrink-0 mt-1" />
+              <div>
+                <p className="text-sm text-muted-foreground">Name</p>
+                <p className="mt-1">
+                  {customer.firstName} {customer.lastName}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-muted-foreground">Date of Birth</p>
-              <p className="mt-1">{formatDate(customer.dateOfBirth)}</p>
+            <div className="flex items-center gap-3">
+              <CalendarDays className="h-5 w-5 text-primary shrink-0 mt-1" />
+              <div>
+                <p className="text-sm text-muted-foreground">Date of Birth</p>
+                <p className="mt-1">{formatDate(customer.dateOfBirth)}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-muted-foreground">Email</p>
-              <p className="mt-1 break-words">{customer.email}</p>
+            <div className="flex items-center gap-3">
+              <Mail className="h-5 w-5 text-primary shrink-0 mt-1" />
+              <div>
+                <p className="text-sm text-muted-foreground">Email</p>
+                <p className="mt-1 break-words">{customer.email}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-muted-foreground">Phone</p>
-              <p className="mt-1">{customer.phone}</p>
+            <div className="flex items-center gap-3">
+              <Phone className="h-5 w-5 text-primary shrink-0 mt-1" />
+              <div>
+                <p className="text-sm text-muted-foreground">Phone</p>
+                <p className="mt-1">{customer.phone}</p>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Shipping Information */}
-        <div className="space-y-4">
-          <h3 className="font-semibold text-lg">Shipping Address</h3>
-          <div className="text-base space-y-1">
-            <p>{shipping.address1}</p>
-            {shipping.address2 && <p>{shipping.address2}</p>}
-            <p>{shipping.city}, {shipping.state} {shipping.zipCode}</p>
-            <p>{shipping.country}</p>
+        {/* Shipping & Billing Information */}
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Shipping Address */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <h3 className="font-semibold text-lg">Shipping Address</h3>
+            </div>
+            <div className="bg-muted/30 p-4 rounded-lg space-y-1 flex items-center gap-3">
+              <MapPin className="h-5 w-5 text-primary shrink-0 mt-1" />
+              <div>
+                <p>{shipping.address1}</p>
+                {shipping.address2 && <p>{shipping.address2}</p>}
+                <p>
+                  {shipping.city}, {shipping.state} {shipping.zipCode}
+                </p>
+                <p>{shipping.country}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Billing Information */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <h3 className="font-semibold text-lg">Billing Details</h3>
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 bg-muted/30 p-4 rounded-lg">
+                <CreditCard className="h-5 w-5 text-primary shrink-0" />
+                <div>
+                  <p className="text-sm text-muted-foreground">
+                    Payment Method
+                  </p>
+                  <p className="font-medium">
+                    Card ending in {payment?.cardLastFour || "****"}
+                  </p>
+                </div>
+              </div>
+              <div className="bg-muted/30 p-4 rounded-lg space-y-1 flex items-center gap-3">
+                <Home className="h-5 w-5 text-primary shrink-0 mt-1" />
+                <div>
+                  {payment?.sameAsShipping ? (
+                    <p className="text-muted-foreground">
+                      Billing address is same as shipping
+                    </p>
+                  ) : (
+                    <>
+                      <p>{payment?.billingAddress1 || shipping?.address1}</p>
+                      {payment?.billingAddress2 ||
+                        (shipping?.address2 && (
+                          <p>
+                            {payment?.billingAddress2 || shipping?.address2}
+                          </p>
+                        ))}
+                      <p>
+                        {payment?.billingCity || shipping?.city},{" "}
+                        {payment?.billingState || shipping?.state}{" "}
+                        {payment?.billingZipCode || shipping?.zipCode}
+                      </p>
+                      <p>{payment?.billingCountry || shipping?.country}</p>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Order Total */}
         <div className="border-t pt-6 space-y-4">
           <div className="flex justify-between items-center text-base">
-            <span className="text-muted-foreground">Subscription Price ({product.variant.monthSupply} {monthText})</span>
+            <span className="text-muted-foreground">
+              Subscription Price ({product.variant.monthSupply} {monthText})
+            </span>
             <span>${Number(product.variant.price).toFixed(2)}</span>
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-lg font-semibold">
             <span>Total Due Today</span>
             <div className="flex items-center gap-2">
               <CreditCard className="h-5 w-5" />
-              <span className="text-xl md:text-2xl">${Number(product.variant.price).toFixed(2)}</span>
+              <span className="text-xl md:text-2xl">
+                ${Number(product.variant.price).toFixed(2)}
+              </span>
             </div>
           </div>
         </div>
@@ -142,20 +265,29 @@ export function OrderSummary({
             <Info className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
             <div className="space-y-3 text-sm">
               <p>
-                By placing this order, you agree to our Terms of Service and Privacy Policy. You acknowledge that:
+                By placing this order, you agree to our Terms of Service and
+                Privacy Policy. You acknowledge that:
               </p>
               <ul className="list-disc pl-4 space-y-2 text-muted-foreground">
                 <li>
-                  Your subscription will automatically renew every {product.variant.monthSupply} {monthText} at ${Number(product.variant.price).toFixed(2)}.
+                  Your subscription will automatically renew every{" "}
+                  {product.variant.monthSupply} {monthText} at $
+                  {Number(product.variant.price).toFixed(2)}.
                 </li>
                 <li>
-                  You will be billed ${Number(product.variant.price).toFixed(2)} today and every {product.variant.monthSupply} {monthText} up to 12 months unless cancelled.
+                  You will be billed ${Number(product.variant.price).toFixed(2)}{" "}
+                  today and every {product.variant.monthSupply} {monthText} up
+                  to 12 months unless cancelled.
                 </li>
                 <li>
-                  You can cancel your subscription at any time through your account or by contacting <a href="mailto:support@capturehealth.io">customer support</a>.
+                  You can cancel your subscription at any time through your
+                  account or by contacting{" "}
+                  <a href="mailto:support@capturehealth.io">customer support</a>
+                  .
                 </li>
                 <li>
-                  Shipping times may vary. You'll receive a confirmation email with tracking information once your order ships.
+                  Shipping times may vary. You'll receive a confirmation email
+                  with tracking information once your order ships.
                 </li>
               </ul>
             </div>
@@ -163,7 +295,7 @@ export function OrderSummary({
         </div>
       </CardContent>
       <CardFooter>
-        <Button 
+        <Button
           className="w-full h-12 text-base"
           size="lg"
           onClick={onSubmit}
@@ -175,7 +307,7 @@ export function OrderSummary({
               Processing Order...
             </>
           ) : (
-            'Place Order'
+            "Place Order"
           )}
         </Button>
       </CardFooter>
