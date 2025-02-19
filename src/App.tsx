@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { ThemeProvider } from "@/lib/theme-context";
 import { CheckoutStepper } from "@/components/checkout/CheckoutStepper";
-import { ProductConfirmation } from "@/components/checkout/ProductConfirmation";
-import { CustomerForm } from "@/components/checkout/CustomerForm";
-import { ShippingForm } from "@/components/checkout/ShippingForm";
+import { InitialForm } from "@/components/checkout/InitialForm";
 import { PaymentForm } from "@/components/checkout/PaymentForm";
 import { Questionnaire } from "@/components/checkout/Questionnaire";
 import { OrderSummary } from "@/components/checkout/OrderSummary";
@@ -15,16 +13,8 @@ import { Product, Question } from "./lib/types";
 
 const steps = [
   {
-    title: "Confirm",
-    description: "Review selection",
-  },
-  {
     title: "Details",
-    description: "Personal info",
-  },
-  {
-    title: "Shipping",
-    description: "Delivery info",
+    description: "Product & Personal Info",
   },
   {
     title: "Payment",
@@ -35,6 +25,28 @@ const steps = [
     description: "Quick questions",
   },
 ];
+
+interface FormData {
+  offeringId: string | null;
+  customer: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    dateOfBirth: string;
+    gender: string;
+  } | null;
+  shipping: {
+    address1: string;
+    address2: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  } | null;
+  payment: any | null;
+  questionnaire: any | null;
+}
 
 function App() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -48,7 +60,7 @@ function App() {
   const [authNetCredentials, setAuthNetCredentials] = useState<string | null>(null);
   const [apiError, setApiError] = useState<any>(null);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     offeringId: null,
     customer: null,
     shipping: null,
@@ -70,11 +82,6 @@ function App() {
   useEffect(() => {
     setFormData((prev) => ({ ...prev}));
   }, [sessionKey]);
- 
-  // DEBUG
-  // useEffect(() => {
-  //   console.log("Form Data: ", formData);
-  // }, [formData]);
 
   const fetchConfig = async (sessionKey: string) => {
     try {
@@ -113,21 +120,32 @@ function App() {
     }
   }, [sessionKey]);
 
-  const handleProductConfirm = () => setCurrentStep(1);
-
-  const handleCustomerSubmit = (data: any) => {
-    setFormData((prev) => ({ ...prev, customer: data }));
-    setCurrentStep(2);
-  };
-
-  const handleShippingSubmit = (data: any) => {
-    setFormData((prev) => ({ ...prev, shipping: data }));
-    setCurrentStep(3);
+  const handleInitialSubmit = (data: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      customer: {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        dateOfBirth: data.dateOfBirth,
+        gender: data.gender,
+      },
+      shipping: {
+        address1: data.address1,
+        address2: data.address2,
+        city: data.city,
+        state: data.state,
+        zipCode: data.zipCode,
+        country: data.country,
+      }
+    }));
+    setCurrentStep(1);
   };
 
   const handlePaymentSubmit = (data: any) => {
     setFormData((prev) => ({ ...prev, payment: data }));
-    setCurrentStep(4);
+    setCurrentStep(2);
   };
 
   const handleQuestionnaireSubmit = (data: any) => {
@@ -158,22 +176,11 @@ function App() {
         description: "Thank you for your purchase. We'll be in touch soon.",
       });
 
-      // OPTIONAL - Redirect to success page after showing the success message
-      // setTimeout(() => {
-      //   window.location.href = "https://capturehealth.io/success";
-      // }, 3000);
-
-      // Send success message to parent window
       if (window.parent && window.parent !== window) {
         try {
           window.parent.postMessage({
             type: 'CHECKOUT_COMPLETE',
             success: true,
-            // data: {
-            //   orderId: response.orderId,
-            //   customerEmail: formData.customer?.email,
-            //   amount: product?.variant?.price
-            // }
           }, '*');
         } catch (err) {
           console.error('Failed to notify parent window:', err);
@@ -206,16 +213,12 @@ function App() {
     switch (currentStep) {
       case 0:
         return (
-          <ProductConfirmation
+          <InitialForm
             product={product as Product}
-            onConfirm={handleProductConfirm}
+            onSubmit={handleInitialSubmit}
           />
         );
       case 1:
-        return <CustomerForm onSubmit={handleCustomerSubmit} />;
-      case 2:
-        return <ShippingForm onSubmit={handleShippingSubmit} />;
-      case 3:
         return (
           <PaymentForm
             onSubmit={handlePaymentSubmit}
@@ -223,7 +226,7 @@ function App() {
             authNetCredentials={authNetCredentials as string}
           />
         );
-      case 4:
+      case 2:
         return (
           <Questionnaire
             onSubmit={handleQuestionnaireSubmit}
