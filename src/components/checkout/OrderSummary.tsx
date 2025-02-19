@@ -71,34 +71,36 @@ export function OrderSummary({
       <CardContent className="space-y-8">
         {/* Prescription Details */}
         <div className="bg-muted/30 rounded-lg overflow-hidden">
-          <div className="p-6 border-b">
-            
+          <div className="pb-6 border-b">
             <div className="flex flex-col md:flex-row gap-6">
-              <div className="relative h-48 md:h-32 w-full md:w-32 flex-shrink-0 overflow-hidden rounded-md">
-                <Image
-                  src={
-                    product.image ||
-                    `https://capture-health-media-prod.s3.us-east-1.amazonaws.com/Assets/swipe3.jpg`
-                  }
-                  alt={product.name}
-                  className="object-cover"
-                  fill
-                />
-              </div>
-              <div className="flex-1">
-                <h4 className="text-lg font-medium">{product.name}</h4>
-                <p className="text-muted-foreground mt-2">
-                  {product.description}
-                </p>
-                <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
-                  <span className="font-medium">
-                    {product.medicationDosage.strength}{" "}
-                    {product.medicationDosage.unit}
-                  </span>
-                  <span className="text-muted-foreground">•</span>
-                  <span className="capitalize">
-                    {product.medicationDosage.form}
-                  </span>
+              {/* Updated image section to match ProductConfirmation */}
+              <div className="flex items-start gap-4">
+                <div className="relative h-16 w-16 md:h-32 md:w-32 flex-shrink-0 overflow-hidden rounded-md bg-muted/30">
+                  <Image
+                    src={
+                      product.image ||
+                      `https://capture-health-media-prod.s3.us-east-1.amazonaws.com/Assets/swipe3.jpg`
+                    }
+                    alt={product.name}
+                    className="object-cover"
+                    fill
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-lg font-medium">{product.name}</h4>
+                  <p className="text-muted-foreground mt-2 line-clamp-2 md:line-clamp-none">
+                    {product.description}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2 text-sm border-t md:border-t-0 pt-4 md:pt-0 mt-4 md:mt-4">
+                    <span className="font-medium">
+                      {product.medicationDosage.strength}{" "}
+                      {product.medicationDosage.unit}
+                    </span>
+                    <span className="text-muted-foreground">•</span>
+                    <span className="capitalize">
+                      {product.medicationDosage.form}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
