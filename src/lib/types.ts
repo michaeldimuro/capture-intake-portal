@@ -5,11 +5,19 @@ export interface Product {
   image: string;
   questions: Question[];
   variant: ProductVariant;
+  medicationDosage: ProductDosage;
 }
 
 export interface ProductVariant {
   price: number;
   quantity: number;
+  monthSupply: number;
+}
+
+export interface ProductDosage {
+  strength: string;
+  form: string;
+  unit: string;
 }
 
 export interface CustomerDetails {
