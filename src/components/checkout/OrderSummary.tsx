@@ -149,10 +149,10 @@ export function OrderSummary({
                   Your subscription will automatically renew every {product.variant.monthSupply} {monthText} at ${Number(product.variant.price).toFixed(2)}.
                 </li>
                 <li>
-                  You will be billed ${Number(product.variant.price).toFixed(2)} today and every {product.variant.monthSupply} {monthText} thereafter unless cancelled.
+                  You will be billed ${Number(product.variant.price).toFixed(2)} today and every {product.variant.monthSupply} {monthText} up to 12 months unless cancelled.
                 </li>
                 <li>
-                  You can cancel your subscription at any time through your account or by contacting customer support.
+                  You can cancel your subscription at any time through your account or by contacting <a href="mailto:support@capturehealth.io">customer support</a>.
                 </li>
                 <li>
                   Shipping times may vary. You'll receive a confirmation email with tracking information once your order ships.
