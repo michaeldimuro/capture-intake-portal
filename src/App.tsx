@@ -21,7 +21,7 @@ const steps = [
     description: "Payment details",
   },
   {
-    title: "Survey",
+    title: "Screening",
     description: "Quick questions",
   },
 ];
