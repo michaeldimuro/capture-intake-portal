@@ -63,21 +63,16 @@ export function OrderSummary({
 
   return (
     <Card className="w-full max-w-2xl">
-      <CardHeader className="border-b">
+      <CardHeader>
         <CardTitle className="text-2xl md:text-3xl">
           Review Your Order
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-8 pt-6">
+      <CardContent className="space-y-8">
         {/* Prescription Details */}
         <div className="bg-muted/30 rounded-lg overflow-hidden">
           <div className="p-6 border-b">
-            <div className="flex items-center gap-2 mb-6">
-              {/* <Package2 className="h-5 w-5 text-primary" /> */}
-              <h3 className="font-semibold text-lg md:text-xl">
-                Prescription Details
-              </h3>
-            </div>
+            
             <div className="flex flex-col md:flex-row gap-6">
               <div className="relative h-48 md:h-32 w-full md:w-32 flex-shrink-0 overflow-hidden rounded-md">
                 <Image
