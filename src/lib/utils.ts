@@ -5,6 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function pluralize(count: number, singular: string, plural: string) {
+  return count === 1 ? singular : plural;
+}
+
 const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY;
 const ALGORITHM = "aes-256-gcm";
 

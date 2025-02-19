@@ -12,6 +12,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreditCard } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -32,7 +39,24 @@ interface PaymentFormProps {
   authNetCredentials: string;
 }
 
-// Decrypt credentials only when needed
+const formSchema = z.object({
+  nameOnCard: z.string().min(2, "Name on card is required"),
+  cardNumber: z.string().min(15, "Invalid card number"),
+  expiryMonth: z.string().min(1, "Month is required"),
+  expiryYear: z.string().min(4, "Year is required"),
+  cvv: z.string().min(3, "Invalid CVV"),
+  sameAsShipping: z.boolean(),
+  billingAddress1: z.string().refine((val) => {
+    if (!val) return false;
+    return val.length >= 5;
+  }, "Address is required"),
+  billingAddress2: z.string().optional(),
+  billingCity: z.string().min(2, "City is required"),
+  billingState: z.string().min(2, "State is required"),
+  billingZipCode: z.string().min(5, "Valid ZIP code required"),
+  billingCountry: z.string().min(2, "Country is required"),
+});
+
 const getDecryptedCredentials = async (authNetCredentials: string): Promise<AuthNetCredentials> => {
   try {
     return JSON.parse(await decrypt(authNetCredentials));
@@ -53,11 +77,7 @@ export function PaymentForm({
 
   useEffect(() => {
     const script = document.createElement('script');
-    // Always use HTTPS for payment-related scripts
     script.src = 'https://js.authorize.net/v1/Accept.js'
-    // import.meta.env.PROD 
-    //   ? 'https://js.authorize.net/v1/Accept.js'
-    //   : "https://jstest.authorize.net/v1/Accept.js";
     script.async = true;
     script.onerror = () => {
       toast.error("Failed to load payment system");
@@ -68,42 +88,6 @@ export function PaymentForm({
       document.body.removeChild(script);
     };
   }, []);
-
-  const formSchema = z.object({
-    nameOnCard: z.string().min(2, "Name on card is required"),
-    sameAsShipping: z.boolean(),
-    billingAddress1: z.string().refine((val) => {
-      if (!sameAsShipping) {
-        return val.length >= 5;
-      }
-      return true;
-    }, "Address is required"),
-    billingAddress2: z.string().optional(),
-    billingCity: z.string().refine((val) => {
-      if (!sameAsShipping) {
-        return val.length >= 2;
-      }
-      return true;
-    }, "City is required"),
-    billingState: z.string().refine((val) => {
-      if (!sameAsShipping) {
-        return val.length >= 2;
-      }
-      return true;
-    }, "State is required"),
-    billingZipCode: z.string().refine((val) => {
-      if (!sameAsShipping) {
-        return val.length >= 5;
-      }
-      return true;
-    }, "Valid ZIP code required"),
-    billingCountry: z.string().refine((val) => {
-      if (!sameAsShipping) {
-        return val.length >= 2;
-      }
-      return true;
-    }, "Country is required"),
-  });
 
   const form = useForm<PaymentDetails>({
     resolver: zodResolver(formSchema),
@@ -139,8 +123,8 @@ export function PaymentForm({
   return (
     <Card className="w-full max-w-2xl">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <CreditCard className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-2xl md:text-3xl">
+          <CreditCard className="h-6 w-6 md:h-7 md:w-7" />
           Payment Information
         </CardTitle>
       </CardHeader>
@@ -177,40 +161,50 @@ function PaymentFormInner({
   authNetCredentials,
   setCardLastFour,
 }: PaymentFormInnerProps) {
+  // Generate months array (01-12)
+  const months = Array.from({ length: 12 }, (_, i) => {
+    const month = (i + 1).toString().padStart(2, '0');
+    return { value: month, label: month };
+  });
+
+  // Generate years array (current year + 20 years)
+  const currentYear = new Date().getFullYear();
+  const years = Array.from(
+    { length: 21 },
+    (_, i) => (currentYear + i).toString()
+  );
+
   const handleSubmit = async (formData: any) => {
     if (typeof Accept === 'undefined') {
       toast.error('Payment system not initialized');
       return;
     }
 
-    const cardNumber = (document.getElementById('cardNumber') as HTMLInputElement)?.value;
+    const cardNumber = formData.cardNumber;
     if (!cardNumber) {
       toast.error('Please enter card number');
       return;
     }
 
-    // Capture last 4 digits before sending to Authorize.net
     const lastFour = cardNumber.slice(-4);
     setCardLastFour(lastFour);
-    const { apiLoginId, clientKey } = await getDecryptedCredentials(authNetCredentials);
-
-    console.log("DEBUG >> apiLoginId: ", apiLoginId)
-    console.log("DEBUG >> clientKey: ", clientKey)
-
-    const secureData = {
-      authData: {
-        clientKey: clientKey,
-        apiLoginID: apiLoginId
-      },
-      cardData: {
-        cardNumber,
-        month: (document.getElementById('expiryMonth') as HTMLInputElement)?.value,
-        year: (document.getElementById('expiryYear') as HTMLInputElement)?.value,
-        cardCode: (document.getElementById('cvv') as HTMLInputElement)?.value
-      }
-    };
-
+    
     try {
+      const { apiLoginId, clientKey } = await getDecryptedCredentials(authNetCredentials);
+
+      const secureData = {
+        authData: {
+          clientKey: clientKey,
+          apiLoginID: apiLoginId
+        },
+        cardData: {
+          cardNumber,
+          month: formData.expiryMonth,
+          year: formData.expiryYear,
+          cardCode: formData.cvv
+        }
+      };
+
       Accept.dispatchData(secureData, responseHandler);
     } catch (error) {
       toast.error('Payment processing error');
@@ -236,70 +230,110 @@ function PaymentFormInner({
   };
 
   return (
-    <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+    <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
       <FormField
         control={form.control}
         name="nameOnCard"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Name on Card</FormLabel>
+            <FormLabel className="text-base">Name on Card</FormLabel>
             <FormControl>
-              <Input {...field} />
+              <Input {...field} className="h-12" />
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
       
-      <div className="space-y-4">
-        <FormItem>
-          <FormLabel>Card Number</FormLabel>
-          <FormControl>
-            <Input
-              id="cardNumber"
-              type="text"
-              placeholder="1234 5678 9012 3456"
-              maxLength={16}
-            />
-          </FormControl>
-        </FormItem>
+      <div className="space-y-6">
+        <FormField
+          control={form.control}
+          name="cardNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-base">Card Number</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="1234 5678 9012 3456"
+                  maxLength={16}
+                  className="h-12"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <div className="grid grid-cols-3 gap-4">
-          <FormItem>
-            <FormLabel>Expiry Month</FormLabel>
-            <FormControl>
-              <Input
-                id="expiryMonth"
-                type="text"
-                placeholder="MM"
-                maxLength={2}
-              />
-            </FormControl>
-          </FormItem>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+          <FormField
+            control={form.control}
+            name="expiryMonth"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base">Expiry Month</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <FormControl>
+                    <SelectTrigger className="h-12">
+                      <SelectValue placeholder="MM" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {months.map((month) => (
+                      <SelectItem key={month.value} value={month.value}>
+                        {month.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           
-          <FormItem>
-            <FormLabel>Expiry Year</FormLabel>
-            <FormControl>
-              <Input
-                id="expiryYear"
-                type="text"
-                placeholder="YYYY"
-                maxLength={4}
-              />
-            </FormControl>
-          </FormItem>
+          <FormField
+            control={form.control}
+            name="expiryYear"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base">Expiry Year</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <FormControl>
+                    <SelectTrigger className="h-12">
+                      <SelectValue placeholder="YYYY" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {years.map((year) => (
+                      <SelectItem key={year} value={year}>
+                        {year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-          <FormItem>
-            <FormLabel>CVV</FormLabel>
-            <FormControl>
-              <Input
-                id="cvv"
-                type="text"
-                placeholder="123"
-                maxLength={4}
-              />
-            </FormControl>
-          </FormItem>
+          <FormField
+            control={form.control}
+            name="cvv"
+            render={({ field }) => (
+              <FormItem className="col-span-2 sm:col-span-1">
+                <FormLabel className="text-base">CVV</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="123"
+                    maxLength={4}
+                    className="h-12"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
       </div>
 
@@ -318,21 +352,22 @@ function PaymentFormInner({
               />
             </FormControl>
             <div className="space-y-1 leading-none">
-              <FormLabel>Same as Shipping Address</FormLabel>
+              <FormLabel className="text-base">Same as Shipping Address</FormLabel>
             </div>
           </FormItem>
         )}
       />
+
       {!sameAsShipping && (
-        <div className="space-y-4">
+        <div className="space-y-6">
           <FormField
             control={form.control}
             name="billingAddress1"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Billing Address Line 1</FormLabel>
+                <FormLabel className="text-base">Billing Address Line 1</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} className="h-12" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -343,23 +378,23 @@ function PaymentFormInner({
             name="billingAddress2"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Billing Address Line 2 (Optional)</FormLabel>
+                <FormLabel className="text-base">Billing Address Line 2 (Optional)</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} className="h-12" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <FormField
               control={form.control}
               name="billingCity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>City</FormLabel>
+                  <FormLabel className="text-base">City</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} className="h-12" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -370,24 +405,24 @@ function PaymentFormInner({
               name="billingState"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>State</FormLabel>
+                  <FormLabel className="text-base">State</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} className="h-12" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <FormField
               control={form.control}
               name="billingZipCode"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>ZIP Code</FormLabel>
+                  <FormLabel className="text-base">ZIP Code</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} className="h-12" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -398,9 +433,9 @@ function PaymentFormInner({
               name="billingCountry"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Country</FormLabel>
+                  <FormLabel className="text-base">Country</FormLabel>
                   <FormControl>
-                    <Input {...field} value="US" disabled />
+                    <Input {...field} value="US" disabled className="h-12" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -409,7 +444,7 @@ function PaymentFormInner({
           </div>
         </div>
       )}
-      <Button type="submit" className="w-full">
+      <Button type="submit" className="w-full h-12 text-base">
         Continue
       </Button>
     </form>

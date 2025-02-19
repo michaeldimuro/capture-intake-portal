@@ -26,17 +26,29 @@ const formSchema = z.object({
   lastName: z.string().min(2, 'Last name is required'),
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'Invalid phone number'),
-  dateOfBirth: z.string().refine((date) => {
-    const birthDate = new Date(date);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age >= 18;
-  }, 'You must be at least 18 years old'),
+  birthMonth: z.string().min(1, 'Month is required'),
+  birthDay: z.string().min(1, 'Day is required'),
+  birthYear: z.string().min(4, 'Year is required'),
   gender: z.string().min(1, 'Please select your gender'),
+}).refine((data) => {
+  const today = new Date();
+  const birthDate = new Date(
+    parseInt(data.birthYear),
+    parseInt(data.birthMonth) - 1,
+    parseInt(data.birthDay)
+  );
+  
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  
+  return age >= 18;
+}, {
+  message: "You must be at least 18 years old",
+  path: ["birthYear"]
 });
 
 interface CustomerFormProps {
@@ -45,35 +57,77 @@ interface CustomerFormProps {
 }
 
 export function CustomerForm({ onSubmit, defaultValues }: CustomerFormProps) {
-  const form = useForm<CustomerDetails>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: defaultValues || {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      dateOfBirth: '',
-      gender: '',
+    defaultValues: {
+      firstName: defaultValues?.firstName || '',
+      lastName: defaultValues?.lastName || '',
+      email: defaultValues?.email || '',
+      phone: defaultValues?.phone || '',
+      birthMonth: '',
+      birthDay: '',
+      birthYear: '',
+      gender: defaultValues?.gender || '',
     },
   });
+
+  const handleSubmit = (data: any) => {
+    // Format the date to match the expected string format
+    const formattedData = {
+      ...data,
+      dateOfBirth: `${data.birthYear}-${data.birthMonth.padStart(2, '0')}-${data.birthDay.padStart(2, '0')}`,
+    };
+    
+    // Remove the individual date fields before submitting
+    delete formattedData.birthMonth;
+    delete formattedData.birthDay;
+    delete formattedData.birthYear;
+    
+    onSubmit(formattedData);
+  };
+
+  // Generate arrays for days, months, and years
+  const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+  const months = [
+    { value: "1", label: "January" },
+    { value: "2", label: "February" },
+    { value: "3", label: "March" },
+    { value: "4", label: "April" },
+    { value: "5", label: "May" },
+    { value: "6", label: "June" },
+    { value: "7", label: "July" },
+    { value: "8", label: "August" },
+    { value: "9", label: "September" },
+    { value: "10", label: "October" },
+    { value: "11", label: "November" },
+    { value: "12", label: "December" },
+  ];
+  
+  // Generate years starting from 18 years ago
+  const currentYear = new Date().getFullYear();
+  const maxYear = currentYear - 18; // Oldest allowed birth year
+  const years = Array.from(
+    { length: 82 }, // This will give us a range of 82 years (from 18 to 100 years old)
+    (_, i) => (maxYear - i).toString()
+  );
 
   return (
     <Card className="w-full max-w-2xl">
       <CardHeader>
-        <CardTitle>Personal Information</CardTitle>
+        <CardTitle className="text-xl md:text-3xl">Personal Information</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>First Name</FormLabel>
+                    <FormLabel className="text-base">First Name</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} className="h-12" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -84,24 +138,122 @@ export function CustomerForm({ onSubmit, defaultValues }: CustomerFormProps) {
                 name="lastName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Last Name</FormLabel>
+                    <FormLabel className="text-base">Last Name</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} className="h-12" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+
+            <div className="space-y-2">
+              <FormLabel className="text-base">Date of Birth</FormLabel>
+              <div className="grid grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="birthMonth"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="h-12">
+                            <SelectValue placeholder="Month" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {months.map((month) => (
+                            <SelectItem key={month.value} value={month.value}>
+                              {month.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="birthDay"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="h-12">
+                            <SelectValue placeholder="Day" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {days.map((day) => (
+                            <SelectItem key={day} value={day}>
+                              {day}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="birthYear"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="h-12">
+                            <SelectValue placeholder="Year" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {years.map((year) => (
+                            <SelectItem key={year} value={year}>
+                              {year}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            <FormField
+              control={form.control}
+              name="gender"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base">Gender</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="Select gender" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="male">Male</SelectItem>
+                      <SelectItem value="female">Female</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="space-y-6">
               <FormField
                 control={form.control}
-                name="dateOfBirth"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Date of Birth</FormLabel>
+                    <FormLabel className="text-base">Email</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <Input type="email" {...field} className="h-12" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -109,53 +261,20 @@ export function CustomerForm({ onSubmit, defaultValues }: CustomerFormProps) {
               />
               <FormField
                 control={form.control}
-                name="gender"
+                name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Gender</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select gender" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="male">Male</SelectItem>
-                        <SelectItem value="female">Female</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <FormLabel className="text-base">Phone</FormLabel>
+                    <FormControl>
+                      <Input type="tel" {...field} className="h-12" />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input type="email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone</FormLabel>
-                  <FormControl>
-                    <Input type="tel" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="w-full">Continue</Button>
+
+            <Button type="submit" className="w-full h-12 text-base">Continue</Button>
           </form>
         </Form>
       </CardContent>
