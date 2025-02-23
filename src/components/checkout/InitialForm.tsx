@@ -155,7 +155,7 @@ export function InitialForm({ product, onSubmit }: InitialFormProps) {
                   <p className="text-muted-foreground mt-2 line-clamp-2 md:line-clamp-none">
                     {product.description}
                   </p>
-                  <div className="flex flex-wrap items-center gap-2 text-sm border-t md:border-t-0 pt-4 md:pt-0 mt-4 md:mt-4">
+                  {/* <div className="flex flex-wrap items-center gap-2 text-sm border-t md:border-t-0 pt-4 md:pt-0 mt-4 md:mt-4">
                     <span className="font-medium">
                       {product.medicationDosage.strength} {product.medicationDosage.unit}
                     </span>
@@ -163,7 +163,7 @@ export function InitialForm({ product, onSubmit }: InitialFormProps) {
                     <span className="capitalize">
                       {product.medicationDosage.form}
                     </span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -184,7 +184,7 @@ export function InitialForm({ product, onSubmit }: InitialFormProps) {
               <div>
                 <p className="text-sm text-muted-foreground">Quantity</p>
                 <p className="font-medium">
-                  {totalQuantity} {product.medicationDosage.form}s
+                  {totalQuantity} doses
                 </p>
               </div>
             </div>
@@ -204,7 +204,7 @@ export function InitialForm({ product, onSubmit }: InitialFormProps) {
               <div>
                 <p className="font-medium text-base">Quantity per shipment</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {product.variant.quantity} {product.medicationDosage.form}s ×{" "}
+                  {product.variant.quantity} doses ×{" "}
                   {product.variant.monthSupply} {monthText}
                 </p>
               </div>

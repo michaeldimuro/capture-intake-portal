@@ -88,7 +88,7 @@ export function OrderSummary({
                     fill
                   />
                 </div>
-                <div className="flex-1 min-w-0">
+                {/* <div className="flex-1 min-w-0">
                   <h4 className="text-lg font-medium">{product.name}</h4>
                   <p className="text-muted-foreground mt-2 line-clamp-2 md:line-clamp-none">
                     {product.description}
@@ -103,7 +103,7 @@ export function OrderSummary({
                       {product.medicationDosage.form}
                     </span>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -114,7 +114,7 @@ export function OrderSummary({
               <div>
                 <p className="font-medium text-base">Quantity per shipment</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {totalQuantity} {product.medicationDosage.form}s
+                  {totalQuantity} doses
                   <br />({product.variant.quantity} units ×{" "}
                   {product.variant.monthSupply} {monthText})
                 </p>

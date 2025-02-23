@@ -14,7 +14,7 @@ import { Product, Question } from "./lib/types";
 const steps = [
   {
     title: "Details",
-    description: "Product & Personal Info",
+    description: "Personal info",
   },
   {
     title: "Payment",
@@ -280,9 +280,9 @@ function App() {
           <div className="flex justify-center">{renderStep()}</div>
         </div>
 
-        <div className="flex max-w-4xl mx-auto my-6 justify-center">
+        {/* <div className="flex max-w-4xl mx-auto my-6 justify-center">
           <span className="text-slate-700">Powered by Capture Health</span>
-        </div>
+        </div> */}
       </div>
       <Toaster />
     </ThemeProvider>
