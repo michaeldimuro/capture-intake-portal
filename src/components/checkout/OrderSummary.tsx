@@ -88,12 +88,12 @@ export function OrderSummary({
                     fill
                   />
                 </div>
-                {/* <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0">
                   <h4 className="text-lg font-medium">{product.name}</h4>
                   <p className="text-muted-foreground mt-2 line-clamp-2 md:line-clamp-none">
                     {product.description}
                   </p>
-                  <div className="flex flex-wrap items-center gap-2 text-sm border-t md:border-t-0 pt-4 md:pt-0 mt-4 md:mt-4">
+                  {/* <div className="flex flex-wrap items-center gap-2 text-sm border-t md:border-t-0 pt-4 md:pt-0 mt-4 md:mt-4">
                     <span className="font-medium">
                       {product.medicationDosage.strength}{" "}
                       {product.medicationDosage.unit}
@@ -102,8 +102,8 @@ export function OrderSummary({
                     <span className="capitalize">
                       {product.medicationDosage.form}
                     </span>
-                  </div>
-                </div> */}
+                  </div> */}
+                </div>
               </div>
             </div>
           </div>
@@ -308,7 +308,7 @@ export function OrderSummary({
           ) : isOrderComplete ? (
             "Order Placed Successfully"
           ) : (
-            "Place Order"
+            "Pay Now"
           )}
         </Button>
       </CardFooter>

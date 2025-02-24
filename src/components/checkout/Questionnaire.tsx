@@ -247,8 +247,8 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
 
   if (!currentQuestion) return null;
 
-  const canProceed = answers[currentQuestion.partnerQuestionnaireQuestionId] !== undefined &&
-    (!currentQuestion.isOptional || answers[currentQuestion.partnerQuestionnaireQuestionId] !== '');
+  const canProceed = currentQuestion.isOptional || answers[currentQuestion.partnerQuestionnaireQuestionId] !== undefined &&
+    answers[currentQuestion.partnerQuestionnaireQuestionId] !== '';
 
   return (
     <Card className="w-full max-w-2xl">
