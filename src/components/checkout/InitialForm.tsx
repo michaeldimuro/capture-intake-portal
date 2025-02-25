@@ -252,7 +252,7 @@ export function InitialForm({ product, onSubmit }: InitialFormProps) {
             </div>
           </div> */}
 
-          <div className="py-4 border-t bg-muted/50 rounded-lg px-4">
+          <div className="py-4 border-t bg-muted/50 px-4">
             <div className="flex items-center justify-between gap-4 py-2">
               <div>
                 <p className="font-medium text-base">Quantity per shipment</p>
