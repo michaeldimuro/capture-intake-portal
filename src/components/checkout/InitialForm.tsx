@@ -546,7 +546,17 @@ export function InitialForm({ product, onSubmit }: InitialFormProps) {
                     <FormItem>
                       <FormLabel className="text-base">ZIP Code</FormLabel>
                       <FormControl>
-                        <Input {...field} className="h-12" />
+                        <Input 
+                          {...field} 
+                          className="h-12"
+                          maxLength={5}
+                          pattern="[0-9]*"
+                          inputMode="numeric"
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '').slice(0, 5);
+                            field.onChange(value);
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
