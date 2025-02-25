@@ -247,6 +247,16 @@ export function OrderSummary({
             </span>
             <span>${Number(product.variant.price).toFixed(2)}</span>
           </div>
+          <div className="flex justify-between items-center text-base">
+            <span className="text-muted-foreground">
+              Standard Shipping (3-5 days)
+            </span>
+            <div>
+              <p className="line-through">$10.00</p>
+              <p className="text-green-600 text-right">Free</p>
+            </div>
+            
+          </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-lg font-semibold">
             <span>Total Due Today</span>
             <div className="flex items-center gap-2">
@@ -281,12 +291,11 @@ export function OrderSummary({
                 <li>
                   You can cancel your subscription at any time through your
                   account or by contacting{" "}
-                  <a href="mailto:support@capturehealth.io">customer support</a>
+                  <a href="mailto:customerservice@hard.health">customer support</a>
                   .
                 </li>
                 <li>
-                  Shipping times may vary. You'll receive a confirmation email
-                  with tracking information once your order ships.
+                  Your order will be shipped within 3-5 business days after physician approval. You will receive an email once your prescription is approved and the order is being processed.
                 </li>
               </ul>
             </div>

@@ -169,7 +169,7 @@ export function InitialForm({ product, onSubmit }: InitialFormProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4">
+          {/* <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4">
             <div className="flex items-center gap-3 bg-primary/5 p-4 rounded-lg">
               <Pill className="h-5 w-5 text-primary shrink-0" />
               <div>
@@ -197,7 +197,7 @@ export function InitialForm({ product, onSubmit }: InitialFormProps) {
                 </p>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div className="py-4 border-t bg-muted/50 rounded-lg px-4">
             <div className="flex items-center justify-between gap-4 py-2">
@@ -213,7 +213,24 @@ export function InitialForm({ product, onSubmit }: InitialFormProps) {
               </p>
             </div>
 
-            <div className="flex items-center justify-between mt-4 py-2">
+            <div className="flex items-center justify-between gap-4 py-2">
+              <div>
+                <p className="font-medium text-base">Shipping</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Standard Shipping (3-5 days)
+                </p>
+              </div>
+              <div>
+              <p className="text-xl font-semibold shrink-0 line-through">
+                $10.00
+              </p>
+              <p className="text-xl font-semibold shrink-0 text-green-600 text-right">
+                Free
+              </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between py-2">
               <div>
                 <p className="font-medium text-base">Subscription Price</p>
                 <p className="text-sm text-muted-foreground mt-1">
