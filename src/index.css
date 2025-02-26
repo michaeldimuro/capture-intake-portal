@@ -39,6 +39,7 @@ h1 {
   line-height: 1.1;
 }
 
+/* Base button styles */
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -56,6 +57,17 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Override for form controls */
+[role="checkbox"],
+[role="radio"],
+.radix-checkbox,
+.radix-radio {
+  width: 1.2em !important;
+  height: 1.2em !important;
+  aspect-ratio: 1 / 1 !important;
+  padding: 0 !important;
 }
 
 @media (prefers-color-scheme: light) {

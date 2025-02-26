@@ -341,7 +341,7 @@ function PaymentFormInner({
         control={form.control}
         name="sameAsShipping"
         render={({ field }) => (
-          <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+          <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4">
             <FormControl>
               <Checkbox
                 checked={field.value}
@@ -349,9 +349,10 @@ function PaymentFormInner({
                   field.onChange(checked);
                   setSameAsShipping(checked as boolean);
                 }}
+                className={field.value ? "border-primary bg-primary text-primary-foreground" : "border-input bg-background"}
               />
             </FormControl>
-            <div className="space-y-1 leading-none">
+            <div className="leading-none">
               <FormLabel className="text-base">Same as Shipping Address</FormLabel>
             </div>
           </FormItem>
