@@ -295,7 +295,7 @@ export function OrderSummary({
                   .
                 </li>
                 <li>
-                  Your order will be shipped within 3-5 business days after physician approval. You will receive an email once your prescription is approved and the order is being processed.
+                Your order will be shipped to arrive within 3-5 business days after physician approval. You will receive an email once your prescription is approved and the order is being processed.
                 </li>
               </ul>
             </div>

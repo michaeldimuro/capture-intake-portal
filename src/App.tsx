@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ThemeProvider } from "@/lib/theme-context";
 import { CheckoutStepper } from "@/components/checkout/CheckoutStepper";
 import { InitialForm } from "@/components/checkout/InitialForm";
@@ -60,6 +60,7 @@ function App() {
   const [authNetCredentials, setAuthNetCredentials] = useState<string | null>(null);
   const [apiError, setApiError] = useState<any>(null);
   const [isOrderComplete, setIsOrderComplete] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const [formData, setFormData] = useState<FormData>({
     offeringId: null,
@@ -83,6 +84,14 @@ function App() {
   useEffect(() => {
     setFormData((prev) => ({ ...prev}));
   }, [sessionKey]);
+
+  // Scroll to top when showing summary
+  useEffect(() => {
+    if (showingSummary && contentRef.current) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      contentRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [showingSummary]);
 
   const fetchConfig = async (sessionKey: string) => {
     try {
@@ -142,16 +151,19 @@ function App() {
       }
     }));
     setCurrentStep(1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handlePaymentSubmit = (data: any) => {
     setFormData((prev) => ({ ...prev, payment: data }));
     setCurrentStep(2);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleQuestionnaireSubmit = (data: any) => {
     setFormData((prev) => ({ ...prev, questionnaire: data }));
     setShowingSummary(true);
+    // Scroll to top is handled in the useEffect
   };
 
   const handlePlaceOrder = async () => {
@@ -262,7 +274,7 @@ function App() {
   return (
     <ThemeProvider>
       <div className="min-h-screen bg-gray-50/50 p-4 md:p-8">
-        {false &&company?.logo && (
+        {false && company?.logo && (
           <div className="flex max-w-4xl mx-auto my-8 justify-center">
             <img
               src="https://capture-health-media-prod.s3.us-east-1.amazonaws.com/Assets/hard_logo_slogan.png"
@@ -272,19 +284,15 @@ function App() {
           </div>
         )}
 
-        <div className="max-w-4xl mx-auto bg-background rounded-xl shadow-lg py-6 pb-0 md:pb-6">
+        <div ref={contentRef} className="max-w-4xl mx-auto bg-background rounded-xl shadow-lg py-6 pb-0 md:pb-6">
           <CheckoutStepper 
             steps={steps} 
             currentStep={showingSummary ? steps.length : currentStep} 
           />
           <div className="flex justify-center">{renderStep()}</div>
         </div>
-
-        {/* <div className="flex max-w-4xl mx-auto my-6 justify-center">
-          <span className="text-slate-700">Powered by Capture Health</span>
-        </div> */}
+        <Toaster />
       </div>
-      <Toaster />
     </ThemeProvider>
   );
 }

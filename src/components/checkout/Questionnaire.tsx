@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Question, QuestionnaireResponse } from '@/lib/types';
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { ClipboardList, Loader2 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 
 interface QuestionnaireProps {
   onSubmit: (data: QuestionnaireResponse) => void;
@@ -27,22 +28,56 @@ interface QuestionnaireProps {
 }
 
 export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [visibleQuestions, setVisibleQuestions] = useState<Question[]>([]);
+  const [animatingQuestionIds, setAnimatingQuestionIds] = useState<string[]>([]);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const form = useForm<QuestionnaireResponse>();
 
+  // Determine which questions should be visible based on current answers
   useEffect(() => {
-    if (questions.length > 0) {
-      const answeredQuestions = Object.keys(answers).length;
-      const visibleQuestions = questions.filter(q => isQuestionVisible(q)).length;
-      setProgress((answeredQuestions / visibleQuestions) * 100);
-    }
+    const determineVisibleQuestions = () => {
+      const newVisibleQuestions: Question[] = [];
+      const newAnimatingIds: string[] = [];
+      
+      questions.forEach(question => {
+        const wasVisible = visibleQuestions.some(q => q.partnerQuestionnaireQuestionId === question.partnerQuestionnaireQuestionId);
+        const isVisible = isQuestionVisible(question);
+        
+        if (isVisible) {
+          newVisibleQuestions.push(question);
+          
+          // If this question wasn't visible before but is now, mark it for animation
+          if (!wasVisible) {
+            newAnimatingIds.push(question.partnerQuestionnaireQuestionId);
+          }
+        }
+      });
+      
+      setVisibleQuestions(newVisibleQuestions);
+      setAnimatingQuestionIds(newAnimatingIds);
+      
+      // After a short delay, remove the animating class
+      if (newAnimatingIds.length > 0) {
+        setTimeout(() => {
+          setAnimatingQuestionIds([]);
+        }, 500);
+      }
+    };
+    
+    determineVisibleQuestions();
   }, [answers, questions]);
 
-  const currentQuestion = questions[currentQuestionIndex];
+  // Update progress based on answered questions
+  useEffect(() => {
+    if (visibleQuestions.length > 0) {
+      const answeredQuestions = Object.keys(answers).length;
+      setProgress((answeredQuestions / visibleQuestions.length) * 100);
+    }
+  }, [answers, visibleQuestions]);
 
   const isQuestionVisible = (question: Question): boolean => {
     if (!question.rules || question.rules.length === 0) return true;
@@ -58,52 +93,49 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
     });
   };
 
-  const findNextVisibleQuestionIndex = (startIndex: number): number => {
-    let nextIndex = startIndex;
-    while (nextIndex < questions.length) {
-      if (isQuestionVisible(questions[nextIndex])) {
-        return nextIndex;
-      }
-      nextIndex++;
-    }
-    return -1;
-  };
-
-  const findPreviousVisibleQuestionIndex = (startIndex: number): number => {
-    let prevIndex = startIndex;
-    while (prevIndex >= 0) {
-      if (isQuestionVisible(questions[prevIndex])) {
-        return prevIndex;
-      }
-      prevIndex--;
-    }
-    return -1;
-  };
-
   const handleAnswer = (questionId: string, value: any) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
+    
+    // Scroll to the next question after a short delay
+    setTimeout(() => {
+      const nextQuestion = document.querySelector(`[data-question-id="${questionId}"]`)?.nextElementSibling;
+      if (nextQuestion) {
+        nextQuestion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 300);
   };
 
-  const handleNext = () => {
-    const nextIndex = findNextVisibleQuestionIndex(currentQuestionIndex + 1);
-    if (nextIndex !== -1) {
-      setCurrentQuestionIndex(nextIndex);
-    } else {
-      onSubmit(answers);
+  const handleSubmit = () => {
+    // Check if all required questions are answered
+    const unansweredRequired = visibleQuestions.filter(q => 
+      !q.isOptional && !answers[q.partnerQuestionnaireQuestionId]
+    );
+    
+    if (unansweredRequired.length > 0) {
+      // Scroll to the first unanswered required question
+      const firstUnanswered = document.querySelector(`[data-question-id="${unansweredRequired[0].partnerQuestionnaireQuestionId}"]`);
+      if (firstUnanswered) {
+        firstUnanswered.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
     }
-  };
-
-  const handleBack = () => {
-    const prevIndex = findPreviousVisibleQuestionIndex(currentQuestionIndex - 1);
-    if (prevIndex !== -1) {
-      setCurrentQuestionIndex(prevIndex);
-    }
+    
+    onSubmit(answers);
   };
 
   const renderQuestion = (question: Question) => {
-    switch (question.type) {
-      case 'singleOption':
-        return (
+    const isAnimating = animatingQuestionIds.includes(question.partnerQuestionnaireQuestionId);
+    
+    return (
+      <div 
+        key={question.partnerQuestionnaireQuestionId}
+        data-question-id={question.partnerQuestionnaireQuestionId}
+        className={cn(
+          "py-6 border-b last:border-b-0 transition-all duration-500",
+          isAnimating ? "animate-in fade-in slide-in-from-top-4" : ""
+        )}
+      >
+        {question.type === 'singleOption' && (
           <FormField
             control={form.control}
             name={question.partnerQuestionnaireQuestionId}
@@ -119,7 +151,7 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
                   <RadioGroup
                     onValueChange={(value) => {
                       handleAnswer(question.partnerQuestionnaireQuestionId, value);
-                      form.setValue(question.partnerQuestionnaireQuestionId, value);
+                      field.onChange(value);
                     }}
                     value={answers[question.partnerQuestionnaireQuestionId] || ''}
                     className="space-y-2"
@@ -149,10 +181,9 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
               </FormItem>
             )}
           />
-        );
+        )}
 
-      case 'multipleOption':
-        return (
+        {question.type === 'multipleOption' && (
           <FormField
             control={form.control}
             name={question.partnerQuestionnaireQuestionId}
@@ -197,11 +228,9 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
               </FormItem>
             )}
           />
-        );
+        )}
 
-      case 'text':
-      case 'string':
-        return (
+        {(question.type === 'text' || question.type === 'string') && (
           <FormField
             control={form.control}
             name={question.partnerQuestionnaireQuestionId}
@@ -220,19 +249,18 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
                     placeholder={question.placeholder || ''}
                     onChange={(e) => {
                       handleAnswer(question.partnerQuestionnaireQuestionId, e.target.value);
-                      form.setValue(question.partnerQuestionnaireQuestionId, e.target.value);
+                      field.onChange(e.target.value);
                     }}
+                    className="min-h-[100px]"
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-        );
-
-      default:
-        return null;
-    }
+        )}
+      </div>
+    );
   };
 
   if (loading) {
@@ -245,11 +273,6 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
     );
   }
 
-  if (!currentQuestion) return null;
-
-  const canProceed = currentQuestion.isOptional || answers[currentQuestion.partnerQuestionnaireQuestionId] !== undefined &&
-    answers[currentQuestion.partnerQuestionnaireQuestionId] !== '';
-
   return (
     <Card className="w-full max-w-2xl">
       <CardHeader>
@@ -261,24 +284,26 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form className="space-y-6">
-            {renderQuestion(currentQuestion)}
+          <form ref={formRef} className="space-y-0">
+            {visibleQuestions.length > 0 ? (
+              visibleQuestions.map(renderQuestion)
+            ) : (
+              <div className="py-8 text-center text-muted-foreground">
+                <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+                <p>Loading questions...</p>
+              </div>
+            )}
           </form>
         </Form>
       </CardContent>
-      <CardFooter className="flex justify-between">
+      <CardFooter className="pt-4 border-t">
         <Button
-          variant="outline"
-          onClick={handleBack}
-          disabled={currentQuestionIndex === 0}
+          onClick={handleSubmit}
+          className="w-full"
+          size="lg"
+          disabled={visibleQuestions.length === 0}
         >
-          Back
-        </Button>
-        <Button
-          onClick={handleNext}
-          disabled={!canProceed}
-        >
-          {findNextVisibleQuestionIndex(currentQuestionIndex + 1) === -1 ? 'Submit' : 'Next'}
+          Submit Questionnaire
         </Button>
       </CardFooter>
     </Card>
