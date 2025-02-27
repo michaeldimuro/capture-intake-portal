@@ -105,6 +105,37 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
     }, 300);
   };
 
+  // Handle "None of the above" logic for multiple choice questions
+  const handleMultipleOptionChange = (questionId: string, option: string, checked: boolean, options: any[]) => {
+    const currentAnswers = answers[questionId] || [];
+    let newAnswers: string[] = [];
+    
+    // Check if this option is "None of the above" (usually the last option or contains specific text)
+    const isNoneOption = option.toLowerCase().includes('none') || 
+                         option.toLowerCase().includes('none of the above') ||
+                         options.findIndex(opt => opt.option === option) === options.length - 1;
+    
+    if (isNoneOption) {
+      // If "None of the above" is being checked, clear all other selections
+      newAnswers = checked ? [option] : [];
+    } else {
+      if (checked) {
+        // If a regular option is being checked, add it and remove any "None of the above" option
+        newAnswers = [...currentAnswers.filter((a: any) => 
+          !a.toLowerCase().includes('none') && 
+          !a.toLowerCase().includes('none of the above') &&
+          options.findIndex(opt => opt.option === a) !== options.length - 1
+        ), option];
+      } else {
+        // If a regular option is being unchecked, just remove it
+        newAnswers = currentAnswers.filter((a: any) => a !== option);
+      }
+    }
+    
+    handleAnswer(questionId, newAnswers);
+    form.setValue(questionId, newAnswers);
+  };
+
   const handleSubmit = () => {
     // Check if all required questions are answered
     const unansweredRequired = visibleQuestions.filter(q => 
@@ -197,7 +228,14 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
                 )}
                 <div className="space-y-2">
                   {question.options.map((option) => {
-                    const isSelected = answers[question.partnerQuestionnaireQuestionId]?.includes(option.option);
+                    const currentAnswers = answers[question.partnerQuestionnaireQuestionId] || [];
+                    const isSelected = currentAnswers.includes(option.option);
+                    
+                    // Check if this is a "None of the above" option
+                    const isNoneOption = option.option.toLowerCase().includes('none') || 
+                                         option.title.toLowerCase().includes('none of the above') ||
+                                         question.options.findIndex(opt => opt.option === option.option) === question.options.length - 1;
+                    
                     return (
                       <FormItem
                         key={option.partnerQuestionnaireQuestionOptionId}
@@ -207,12 +245,12 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
                           <Checkbox
                             checked={isSelected}
                             onCheckedChange={(checked) => {
-                              const currentAnswers = answers[question.partnerQuestionnaireQuestionId] || [];
-                              const newAnswers = checked
-                                ? [...currentAnswers, option.option]
-                                : currentAnswers.filter((a: string) => a !== option.option);
-                              handleAnswer(question.partnerQuestionnaireQuestionId, newAnswers);
-                              form.setValue(question.partnerQuestionnaireQuestionId, newAnswers);
+                              handleMultipleOptionChange(
+                                question.partnerQuestionnaireQuestionId, 
+                                option.option, 
+                                !!checked,
+                                question.options
+                              );
                             }}
                             className={isSelected ? "border-primary bg-primary text-primary-foreground" : "border-input bg-background"}
                           />
