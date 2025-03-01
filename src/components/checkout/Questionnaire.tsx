@@ -33,6 +33,7 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
   const [progress, setProgress] = useState(0);
   const [visibleQuestions, setVisibleQuestions] = useState<Question[]>([]);
   const [animatingQuestionIds, setAnimatingQuestionIds] = useState<string[]>([]);
+  const [isFormValid, setIsFormValid] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
   const form = useForm<QuestionnaireResponse>();
@@ -77,6 +78,19 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
       const answeredQuestions = Object.keys(answers).length;
       setProgress((answeredQuestions / visibleQuestions.length) * 100);
     }
+  }, [answers, visibleQuestions]);
+
+  // Check if all required questions are answered
+  useEffect(() => {
+    const checkFormValidity = () => {
+      const unansweredRequired = visibleQuestions.filter(q => 
+        !q.isOptional && !answers[q.partnerQuestionnaireQuestionId]
+      );
+      
+      setIsFormValid(unansweredRequired.length === 0 && visibleQuestions.length > 0);
+    };
+    
+    checkFormValidity();
   }, [answers, visibleQuestions]);
 
   const isQuestionVisible = (question: Question): boolean => {
@@ -156,6 +170,8 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
 
   const renderQuestion = (question: Question) => {
     const isAnimating = animatingQuestionIds.includes(question.partnerQuestionnaireQuestionId);
+    const isAnswered = !!answers[question.partnerQuestionnaireQuestionId];
+    const isRequired = !question.isOptional;
     
     return (
       <div 
@@ -172,7 +188,10 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
             name={question.partnerQuestionnaireQuestionId}
             render={({ field }) => (
               <FormItem className="space-y-3">
-                <FormLabel className="text-lg font-semibold">{question.title}</FormLabel>
+                <FormLabel className="text-lg font-semibold">
+                  {question.title}
+                  {isRequired && <span className="text-destructive ml-1">*</span>}
+                </FormLabel>
                 {question.description && (
                   <FormDescription 
                     dangerouslySetInnerHTML={{ __html: question.description }}
@@ -220,7 +239,10 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
             name={question.partnerQuestionnaireQuestionId}
             render={() => (
               <FormItem className="space-y-3">
-                <FormLabel className="text-lg font-semibold">{question.title}</FormLabel>
+                <FormLabel className="text-lg font-semibold">
+                  {question.title}
+                  {isRequired && <span className="text-destructive ml-1">*</span>}
+                </FormLabel>
                 {question.description && (
                   <FormDescription 
                     dangerouslySetInnerHTML={{ __html: question.description }}
@@ -274,7 +296,10 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
             name={question.partnerQuestionnaireQuestionId}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-lg font-semibold">{question.title}</FormLabel>
+                <FormLabel className="text-lg font-semibold">
+                  {question.title}
+                  {isRequired && <span className="text-destructive ml-1">*</span>}
+                </FormLabel>
                 {question.description && (
                   <FormDescription 
                     dangerouslySetInnerHTML={{ __html: question.description }}
@@ -339,7 +364,7 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
           onClick={handleSubmit}
           className="w-full"
           size="lg"
-          disabled={visibleQuestions.length === 0}
+          disabled={!isFormValid || visibleQuestions.length === 0}
         >
           Submit Questionnaire
         </Button>
