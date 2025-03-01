@@ -114,9 +114,14 @@ export function OrderSummary({
               <div>
                 <p className="font-medium text-base">Quantity per shipment</p>
                 <p className="text-sm text-muted-foreground mt-1">
+                  {/* {product.variant.monthSupply} {monthText} ×{" "}<br />
+                  {totalQuantity} doses ×{" "}<br />
+                  {product.medicationDosage.components} */}
+
                   {totalQuantity} doses
-                  <br />({product.variant.quantity} units ×{" "}
-                  {product.variant.monthSupply} {monthText})
+                  <br />({product.variant.quantity} doses ×{" "}
+                  {product.variant.monthSupply} {monthText} x{" "}
+                  {product.medicationDosage.components})
                 </p>
               </div>
             </div>

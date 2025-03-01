@@ -257,8 +257,9 @@ export function InitialForm({ product, onSubmit }: InitialFormProps) {
               <div>
                 <p className="font-medium text-base">Quantity per shipment</p>
                 <p className="text-sm text-muted-foreground mt-1">
+                  {product.variant.monthSupply} {monthText} ×{" "}
                   {product.variant.quantity} doses ×{" "}
-                  {product.variant.monthSupply} {monthText}
+                  {product.medicationDosage.components}
                 </p>
               </div>
               <p className="text-xl font-semibold shrink-0">

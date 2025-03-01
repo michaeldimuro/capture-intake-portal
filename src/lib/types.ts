@@ -18,6 +18,7 @@ export interface ProductDosage {
   strength: string;
   form: string;
   unit: string;
+  components: string;
 }
 
 export interface CustomerDetails {
