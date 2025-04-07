@@ -110,11 +110,14 @@ function App() {
       const { company, offering, questionnaire, authNetCredentials } = config;
 
       setCompany(company);
+      
+      // Use the utility function to adapt the product structure
       setProduct(offering);
-      setQuestions(questionnaire?.questions);
+      
+      setQuestions(questionnaire?.questions || []);
       setAuthNetCredentials(authNetCredentials);
 
-      setFormData((prev) => ({ ...prev, offeringId: offering?.variant?.id }));
+      setFormData((prev) => ({ ...prev, offeringId: offering?.id }));
     } catch (error) {
       console.error("Error fetching config:", error);
       toast.error("Failed to load configuration");

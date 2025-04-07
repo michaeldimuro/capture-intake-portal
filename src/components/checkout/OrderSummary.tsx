@@ -1,4 +1,4 @@
-import { Product, CustomerDetails, ShippingDetails } from "@/lib/types";
+import { Product, CustomerDetails, ShippingDetails } from '@/lib/types';
 import {
   Card,
   CardContent,
@@ -28,16 +28,7 @@ interface OrderSummaryProps {
   product: Product;
   customer: CustomerDetails;
   shipping: ShippingDetails;
-  payment?: {
-    cardLastFour: string;
-    sameAsShipping: boolean;
-    billingAddress1?: string;
-    billingAddress2?: string;
-    billingCity?: string;
-    billingState?: string;
-    billingZipCode?: string;
-    billingCountry?: string;
-  };
+  payment: any;
   onSubmit: () => void;
   isSubmitting: boolean;
   isOrderComplete?: boolean;
@@ -57,11 +48,9 @@ export function OrderSummary({
     return `${month}/${day}/${year}`;
   };
 
-  const totalQuantity =
-    (product.variant.quantity || 0) * (product.variant.monthSupply || 1);
-  const monthlyPrice =
-    Number(product.variant.price) / (product.variant.monthSupply || 1);
-  const monthText = pluralize(product.variant.monthSupply, "month", "months");
+  const totalQuantity = (product.quantity || 0) * (product.monthSupply || 1);
+  const monthlyPrice = Number(product.price) / (product.monthSupply || 1);
+  const monthText = pluralize(product.monthSupply, "month", "months");
 
   return (
     <Card className="w-full max-w-2xl">
@@ -80,27 +69,26 @@ export function OrderSummary({
                 <div className="relative h-16 w-16 md:h-32 md:w-32 flex-shrink-0 overflow-hidden rounded-md bg-muted/30">
                   <Image
                     src={
-                      product.image ||
+                      product.offeringImageUrl ||
                       `https://capture-health-media-prod.s3.us-east-1.amazonaws.com/Assets/swipe3.jpg`
                     }
-                    alt={product.name}
+                    alt={product.offeringName}
                     className="object-cover"
                     fill
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-lg font-medium">{product.name}</h4>
+                  <h4 className="text-lg font-medium">{product.offeringName}</h4>
                   <p className="text-muted-foreground mt-2 line-clamp-2 md:line-clamp-none">
-                    {product.description}
+                    {product.offeringDescription}
                   </p>
                   {/* <div className="flex flex-wrap items-center gap-2 text-sm border-t md:border-t-0 pt-4 md:pt-0 mt-4 md:mt-4">
                     <span className="font-medium">
-                      {product.medicationDosage.strength}{" "}
-                      {product.medicationDosage.unit}
+                      {product.dosageVariety.dosage}
                     </span>
                     <span className="text-muted-foreground">•</span>
                     <span className="capitalize">
-                      {product.medicationDosage.form}
+                      {product.dosageVariety.form}
                     </span>
                   </div> */}
                 </div>
@@ -114,14 +102,13 @@ export function OrderSummary({
               <div>
                 <p className="font-medium text-base">Quantity per shipment</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {/* {product.variant.monthSupply} {monthText} ×{" "}<br />
+                  {/* {product.monthSupply} {monthText} ×{" "}<br />
                   {totalQuantity} doses ×{" "}<br />
-                  {product.medicationDosage.components} */}
+                  {product.compound.name} */}
 
                   {totalQuantity} doses
-                  <br />({product.variant.quantity} doses ×{" "}
-                  {product.variant.monthSupply} {monthText} x{" "}
-                  {product.medicationDosage.components})
+                  <br />({product.quantity} doses ×{" "}
+                  {product.monthSupply} {monthText})
                 </p>
               </div>
             </div>
@@ -130,7 +117,7 @@ export function OrderSummary({
               <div>
                 <p className="font-medium text-base">Subscription Schedule</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Billed every {product.variant.monthSupply} {monthText}
+                  Billed every {product.monthSupply} {monthText}
                   <br />${monthlyPrice.toFixed(2)}/month
                 </p>
               </div>
@@ -248,9 +235,9 @@ export function OrderSummary({
         <div className="border-t pt-6 space-y-4">
           <div className="flex justify-between items-center text-base">
             <span className="text-muted-foreground">
-              Subscription Price ({product.variant.monthSupply} {monthText})
+              Subscription Price ({product.monthSupply} {monthText})
             </span>
-            <span>${Number(product.variant.price).toFixed(2)}</span>
+            <span>${Number(product.price).toFixed(2)}</span>
           </div>
           <div className="flex justify-between items-center text-base">
             <span className="text-muted-foreground">
@@ -267,7 +254,7 @@ export function OrderSummary({
             <div className="flex items-center gap-2">
               <CreditCard className="h-5 w-5" />
               <span className="text-xl md:text-2xl">
-                ${Number(product.variant.price).toFixed(2)}
+                ${Number(product.price).toFixed(2)}
               </span>
             </div>
           </div>
@@ -285,12 +272,12 @@ export function OrderSummary({
               <ul className="list-disc pl-4 space-y-2 text-muted-foreground">
                 <li>
                   Your subscription will automatically renew every{" "}
-                  {product.variant.monthSupply} {monthText} at $
-                  {Number(product.variant.price).toFixed(2)}.
+                  {product.monthSupply} {monthText} at $
+                  {Number(product.price).toFixed(2)}.
                 </li>
                 <li>
-                  You will be billed ${Number(product.variant.price).toFixed(2)}{" "}
-                  today and every {product.variant.monthSupply} {monthText} up
+                  You will be billed ${Number(product.price).toFixed(2)}{" "}
+                  today and every {product.monthSupply} {monthText} up
                   to 12 months unless cancelled.
                 </li>
                 <li>

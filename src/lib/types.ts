@@ -1,11 +1,27 @@
 export interface Product {
   id: string;
-  name: string;
-  description: string;
-  image: string;
-  questions: Question[];
-  variant: ProductVariant;
-  medicationDosage: ProductDosage;
+  companyId: string;
+  compoundId: string;
+  dosageVarietyId: string;
+  mdiCompoundId: string;
+  offeringName: string;
+  offeringDescription: string;
+  offeringImageUrl: string | null;
+  price: number;
+  quantity: number;
+  monthSupply: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  compound: {
+    id: string;
+    name: string;
+  };
+  dosageVariety: {
+    id: string;
+    dosage: string;
+    form: string;
+  };
 }
 
 export interface ProductVariant {
@@ -122,7 +138,7 @@ export interface Question {
 export interface Questionnaire {
   id: string;
   name: string;
-  description: string;
-  questionnaireId: string;
+  mdiQuestionnaireId: string;
+  lastSyncedAt: string;
   questions: Question[];
 }

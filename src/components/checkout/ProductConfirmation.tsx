@@ -14,11 +14,9 @@ export function ProductConfirmation({
   product,
   onConfirm,
 }: ProductConfirmationProps) {
-  const totalQuantity =
-    (product.variant.quantity || 0) * (product.variant.monthSupply || 1);
-  const monthlyPrice =
-    Number(product.variant.price) / (product.variant.monthSupply || 1);
-  const monthText = pluralize(product.variant.monthSupply, "month", "months");
+  const totalQuantity = (product.quantity || 0) * (product.monthSupply || 1);
+  const monthlyPrice = Number(product.price) / (product.monthSupply || 1);
+  const monthText = pluralize(product.monthSupply, "month", "months");
 
   return (
     <Card className="w-full max-w-2xl">
@@ -37,27 +35,26 @@ export function ProductConfirmation({
                 <div className="relative h-16 w-16 md:h-32 md:w-32 flex-shrink-0 overflow-hidden rounded-md bg-muted/30">
                   <Image
                     src={
-                      product.image ||
+                      product.offeringImageUrl ||
                       `https://capture-health-media-prod.s3.us-east-1.amazonaws.com/Assets/swipe3.jpg`
                     }
-                    alt={product.name}
+                    alt={product.offeringName}
                     className="object-cover"
                     fill
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-lg font-medium">{product.name}</h4>
+                  <h4 className="text-lg font-medium">{product.offeringName}</h4>
                   <p className="text-muted-foreground mt-2 line-clamp-2 md:line-clamp-none">
-                    {product.description}
+                    {product.offeringDescription}
                   </p>
                   <div className="flex flex-wrap items-center gap-2 text-sm border-t md:border-t-0 pt-4 md:pt-0 mt-4 md:mt-4">
                     <span className="font-medium">
-                      {product.medicationDosage.strength}{" "}
-                      {product.medicationDosage.unit}
+                      {product.dosageVariety.dosage}
                     </span>
                     <span className="text-muted-foreground">•</span>
                     <span className="capitalize">
-                      {product.medicationDosage.form}
+                      {product.dosageVariety.form}
                     </span>
                   </div>
                 </div>
@@ -73,8 +70,7 @@ export function ProductConfirmation({
             <div>
               <p className="text-sm text-muted-foreground">Strength</p>
               <p className="font-medium">
-                {product.medicationDosage.strength}{" "}
-                {product.medicationDosage.unit}
+                {product.dosageVariety.dosage}
               </p>
             </div>
           </div>
@@ -83,7 +79,7 @@ export function ProductConfirmation({
             <div>
               <p className="text-sm text-muted-foreground">Form</p>
               <p className="font-medium capitalize">
-                {product.medicationDosage.form}
+                {product.dosageVariety.form}
               </p>
             </div>
           </div>
@@ -92,7 +88,7 @@ export function ProductConfirmation({
             <div>
               <p className="text-sm text-muted-foreground">Supply</p>
               <p className="font-medium">
-                {product.variant.monthSupply} {monthText}
+                {product.monthSupply} {monthText}
               </p>
             </div>
           </div>
@@ -104,8 +100,8 @@ export function ProductConfirmation({
             <div>
               <p className="font-medium text-base">Quantity per shipment</p>
               <p className="text-sm text-muted-foreground mt-1">
-                {product.variant.quantity} {product.medicationDosage.form}s ×{" "}
-                {product.variant.monthSupply} {monthText}
+                {product.quantity} {product.dosageVariety.form}s ×{" "}
+                {product.monthSupply} {monthText}
               </p>
             </div>
             <p className="text-xl font-semibold shrink-0">
@@ -117,12 +113,12 @@ export function ProductConfirmation({
             <div>
               <p className="font-medium text-base">Subscription Details</p>
               <p className="text-sm text-muted-foreground">
-                Billed every {product.variant.monthSupply} {monthText}
+                Billed every {product.monthSupply} {monthText}
               </p>
             </div>
             <div className="text-right shrink-0">
               <p className="text-2xl md:text-3xl font-bold">
-                ${Number(product.variant.price).toFixed(2)}
+                ${Number(product.price).toFixed(2)}
               </p>
               <p className="text-sm text-muted-foreground mt-1">
                 (${monthlyPrice.toFixed(2)}/month)
