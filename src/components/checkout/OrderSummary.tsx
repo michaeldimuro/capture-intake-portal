@@ -28,7 +28,16 @@ interface OrderSummaryProps {
   product: Product;
   customer: CustomerDetails;
   shipping: ShippingDetails;
-  payment: any;
+  payment?: {
+    cardLastFour: string;
+    sameAsShipping: boolean;
+    billingAddress1?: string;
+    billingAddress2?: string;
+    billingCity?: string;
+    billingState?: string;
+    billingZipCode?: string;
+    billingCountry?: string;
+  };
   onSubmit: () => void;
   isSubmitting: boolean;
   isOrderComplete?: boolean;

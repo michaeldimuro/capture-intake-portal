@@ -173,15 +173,37 @@ function App() {
     setIsSubmitting(true);
 
     try {
+      // Ensure payment data is properly sanitized before sending to API
+      const paymentData = formData.payment ? {
+        paymentMethodId: formData.payment.paymentMethodId,
+        paymentDescriptor: formData.payment.paymentDescriptor,
+        cardLastFour: formData.payment.cardLastFour,
+        nameOnCard: formData.payment.nameOnCard,
+        sameAsShipping: formData.payment.sameAsShipping,
+        billingAddress1: formData.payment.billingAddress1,
+        billingAddress2: formData.payment.billingAddress2,
+        billingCity: formData.payment.billingCity,
+        billingState: formData.payment.billingState,
+        billingZipCode: formData.payment.billingZipCode,
+        billingCountry: formData.payment.billingCountry
+      } : null;
+
+      // Prepare sanitized request body
+      const requestBody = {
+        sessionKey,
+        offeringId: formData.offeringId,
+        customer: formData.customer,
+        shipping: formData.shipping,
+        payment: paymentData,
+        questionnaire: formData.questionnaire
+      };
+
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/intake/process`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          sessionKey,
-          ...formData,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {

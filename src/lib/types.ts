@@ -56,7 +56,10 @@ export interface ShippingDetails {
 }
 
 export interface PaymentDetails {
-  token: string;
+  nameOnCard: string;
+  paymentMethodId: string;  // Tokenized payment method from Authorize.net
+  paymentDescriptor: string; // The descriptor for the payment method
+  cardLastFour: string; // Store only the last 4 digits for display
   sameAsShipping: boolean;
   billingAddress1?: string;
   billingAddress2?: string;

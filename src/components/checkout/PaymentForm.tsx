@@ -205,6 +205,7 @@ function PaymentFormInner({
         }
       };
 
+      // Send card data directly to Authorize.net for tokenization
       Accept.dispatchData(secureData, responseHandler);
     } catch (error) {
       toast.error('Payment processing error');
@@ -220,8 +221,17 @@ function PaymentFormInner({
       }
 
       const opaqueData = response.opaqueData;
+      
+      // PCI compliance: Create a sanitized copy of formData without sensitive card details
+      const sanitizedFormData = { ...formData };
+      
+      // Remove sensitive card data, replacing with PCI-compliant values
+      delete sanitizedFormData.cardNumber;
+      delete sanitizedFormData.cvv;
+      
+      // Submit only the token and non-sensitive data
       onSubmit({
-        ...formData,
+        ...sanitizedFormData,
         paymentMethodId: opaqueData.dataValue,
         paymentDescriptor: opaqueData.dataDescriptor,
         cardLastFour: lastFour
