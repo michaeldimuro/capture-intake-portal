@@ -54,7 +54,7 @@ const formSchema = z.object({
   billingCity: z.string().min(2, "City is required"),
   billingState: z.string().min(2, "State is required"),
   billingZipCode: z.string().min(5, "Valid ZIP code required"),
-  billingCountry: z.string().min(2, "Country is required"),
+  billingCountry: z.string().optional().default("US"),
 });
 
 const getDecryptedCredentials = async (authNetCredentials: string): Promise<AuthNetCredentials> => {
