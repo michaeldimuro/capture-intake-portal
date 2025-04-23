@@ -61,6 +61,8 @@ function App() {
   const [authNetCredentials, setAuthNetCredentials] = useState<string | null>(null);
   const [apiError, setApiError] = useState<any>(null);
   const [isOrderComplete, setIsOrderComplete] = useState(false);
+  const [shippingMethods, setShippingMethods] = useState<any[]>([]);
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState<any | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   const [formData, setFormData] = useState<FormData>({
@@ -106,6 +108,12 @@ function App() {
     }
   }, [currentStep, showingSummary, analyticsEnabled, company?.googleAnalyticsId]);
 
+  useEffect(() => {
+    if (shippingMethods.length === 1) {
+      setSelectedShippingMethod(shippingMethods[0]);
+    }
+  }, [shippingMethods]);
+
   const fetchConfig = async (sessionKey: string) => {
     try {
       const config = await fetch(
@@ -120,7 +128,7 @@ function App() {
         })
         .catch((e) => setApiError(true));
 
-      const { company, offering, questionnaire, authNetCredentials } = config;
+      const { company, offering, questionnaire, authNetCredentials, shippingMethods: methods } = config;
 
       setCompany(company);
       
@@ -129,6 +137,7 @@ function App() {
       
       setQuestions(questionnaire?.questions || []);
       setAuthNetCredentials(authNetCredentials);
+      setShippingMethods(methods || []);
 
       setFormData((prev) => ({ ...prev, offeringId: offering?.id }));
     } catch (error) {
@@ -207,7 +216,8 @@ function App() {
         customer: formData.customer,
         shipping: formData.shipping,
         payment: paymentData,
-        questionnaire: formData.questionnaire
+        questionnaire: formData.questionnaire,
+        shippingMethodId: selectedShippingMethod?.id
       };
 
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/intake/process`, {
@@ -272,6 +282,9 @@ function App() {
           customer={formData.customer!}
           shipping={formData.shipping!}
           payment={formData.payment}
+          shippingMethods={shippingMethods}
+          selectedShippingMethod={selectedShippingMethod}
+          onShippingMethodSelect={setSelectedShippingMethod}
           onSubmit={handlePlaceOrder}
           isSubmitting={isSubmitting}
           isOrderComplete={isOrderComplete}

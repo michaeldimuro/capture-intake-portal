@@ -23,11 +23,22 @@ import {
 } from "lucide-react";
 import Image from "@/components/ui/image";
 import { pluralize } from "@/lib/utils";
+import { useState } from "react";
+
+interface ShippingMethod {
+  id: string;
+  carrier: string;
+  method: string;
+  price: string;
+}
 
 interface OrderSummaryProps {
   product: Product;
   customer: CustomerDetails;
   shipping: ShippingDetails;
+  shippingMethods: ShippingMethod[];
+  selectedShippingMethod: ShippingMethod | null;
+  onShippingMethodSelect: (method: ShippingMethod | null) => void;
   payment?: {
     cardLastFour: string;
     sameAsShipping: boolean;
@@ -47,6 +58,9 @@ export function OrderSummary({
   product,
   customer,
   shipping,
+  shippingMethods,
+  selectedShippingMethod,
+  onShippingMethodSelect,
   payment,
   onSubmit,
   isSubmitting,
@@ -60,6 +74,8 @@ export function OrderSummary({
   const totalQuantity = (product.quantity || 0) * (product.monthSupply || 1);
   const monthlyPrice = Number(product.price) / (product.monthSupply || 1);
   const monthText = pluralize(product.monthSupply, "month", "months");
+  const shippingPrice = selectedShippingMethod ? Number(selectedShippingMethod.price) : 0;
+  const totalPrice = Number(product.price) + shippingPrice;
 
   return (
     <Card className="w-full max-w-2xl">
@@ -242,6 +258,42 @@ export function OrderSummary({
 
         {/* Order Total */}
         <div className="border-t pt-6 space-y-4">
+          {/* Add Shipping Method Selection */}
+          <div className="space-y-4 mb-6">
+            <h4 className="font-medium text-base">Shipping Method</h4>
+            <div className="space-y-2">
+              {shippingMethods.map((method) => (
+                <div
+                  key={method.id}
+                  className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-colors ${
+                    selectedShippingMethod?.id === method.id
+                      ? "border-primary bg-primary/5"
+                      : "border-border hover:border-primary/50"
+                  }`}
+                  onClick={() => onShippingMethodSelect(method)}
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-4 h-4 rounded-full border-2 ${
+                        selectedShippingMethod?.id === method.id
+                          ? "border-primary bg-primary"
+                          : "border-muted-foreground"
+                      }`}
+                    />
+                    <div>
+                      <p className="font-medium capitalize">
+                        {method.carrier} - {method.method.replace(/_/g, " ")}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {Number(method.price) === 0 ? "Free" : `$${Number(method.price).toFixed(2)}`}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="flex justify-between items-center text-base">
             <span className="text-muted-foreground">
               Subscription Price ({product.monthSupply} {monthText})
@@ -249,21 +301,25 @@ export function OrderSummary({
             <span>${Number(product.price).toFixed(2)}</span>
           </div>
           <div className="flex justify-between items-center text-base">
-            <span className="text-muted-foreground">
-              Standard Shipping (3-5 days)
+            <span className="text-muted-foreground">Shipping</span>
+            <span>
+              {selectedShippingMethod ? (
+                shippingPrice === 0 ? (
+                  <p className="text-green-600">Free</p>
+                ) : (
+                  `$${shippingPrice.toFixed(2)}`
+                )
+              ) : (
+                "Select a shipping method"
+              )}
             </span>
-            <div>
-              <p className="line-through">$10.00</p>
-              <p className="text-green-600 text-right">Free</p>
-            </div>
-            
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-lg font-semibold">
             <span>Total Due Today</span>
             <div className="flex items-center gap-2">
               <CreditCard className="h-5 w-5" />
               <span className="text-xl md:text-2xl">
-                ${Number(product.price).toFixed(2)}
+                ${totalPrice.toFixed(2)}
               </span>
             </div>
           </div>
@@ -308,7 +364,7 @@ export function OrderSummary({
           className="w-full h-12 text-base"
           size="lg"
           onClick={onSubmit}
-          disabled={isSubmitting || isOrderComplete}
+          disabled={isSubmitting || isOrderComplete || !selectedShippingMethod}
         >
           {isSubmitting ? (
             <>
@@ -317,6 +373,8 @@ export function OrderSummary({
             </>
           ) : isOrderComplete ? (
             "Order Placed Successfully"
+          ) : !selectedShippingMethod ? (
+            "Select Shipping Method"
           ) : (
             "Pay Now"
           )}
