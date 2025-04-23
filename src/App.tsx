@@ -10,6 +10,7 @@ import { ErrorPage } from "@/components/error-page";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Product, Question } from "./lib/types";
+import { useAnalytics, trackFormProgress, trackFormCompletion, trackFormAbandonment } from "@/lib/analytics";
 
 const steps = [
   {
@@ -93,6 +94,16 @@ function App() {
     }
   }, [showingSummary]);
 
+  // Initialize analytics with the company's GA measurement ID (which might be null)
+  const { isEnabled: analyticsEnabled } = useAnalytics({ measurementId: company?.analyticsId ?? null });
+
+  // Track form progress when step changes
+  useEffect(() => {
+    if (currentStep >= 0 && !showingSummary && analyticsEnabled) {
+      trackFormProgress('checkout', currentStep + 1, steps.length, company?.analyticsId ?? null);
+    }
+  }, [currentStep, showingSummary, analyticsEnabled, company?.analyticsId]);
+
   const fetchConfig = async (sessionKey: string) => {
     try {
       const config = await fetch(
@@ -166,7 +177,6 @@ function App() {
   const handleQuestionnaireSubmit = (data: any) => {
     setFormData((prev) => ({ ...prev, questionnaire: data }));
     setShowingSummary(true);
-    // Scroll to top is handled in the useEffect
   };
 
   const handlePlaceOrder = async () => {
@@ -211,6 +221,9 @@ function App() {
       }
 
       setIsOrderComplete(true);
+      if (analyticsEnabled) {
+        trackFormCompletion('checkout', company?.analyticsId ?? null);
+      }
 
       toast.success("Order completed successfully!", {
         description: "Thank you for your purchase. We'll be in touch soon.",
@@ -236,6 +249,18 @@ function App() {
       setIsSubmitting(false);
     }
   };
+
+  // Track form abandonment
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (!isOrderComplete && analyticsEnabled) {
+        trackFormAbandonment('checkout', currentStep + 1, steps.length, company?.analyticsId ?? null);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [currentStep, isOrderComplete, analyticsEnabled, company?.analyticsId]);
 
   const renderStep = () => {
     if (showingSummary) {
