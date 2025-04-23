@@ -95,14 +95,16 @@ function App() {
   }, [showingSummary]);
 
   // Initialize analytics with the company's GA measurement ID (which might be null)
-  const { isEnabled: analyticsEnabled } = useAnalytics({ measurementId: company?.analyticsId ?? null });
+  const { isEnabled: analyticsEnabled } = useAnalytics({ measurementId: company?.googleAnalyticsId ?? null });
+
+  console.log("DEBUG >> isAnalyticsEnabled: ", analyticsEnabled);
 
   // Track form progress when step changes
   useEffect(() => {
     if (currentStep >= 0 && !showingSummary && analyticsEnabled) {
-      trackFormProgress('checkout', currentStep + 1, steps.length, company?.analyticsId ?? null);
+      trackFormProgress('checkout', currentStep + 1, steps.length, company?.googleAnalyticsId ?? null);
     }
-  }, [currentStep, showingSummary, analyticsEnabled, company?.analyticsId]);
+  }, [currentStep, showingSummary, analyticsEnabled, company?.googleAnalyticsId]);
 
   const fetchConfig = async (sessionKey: string) => {
     try {
@@ -222,7 +224,7 @@ function App() {
 
       setIsOrderComplete(true);
       if (analyticsEnabled) {
-        trackFormCompletion('checkout', company?.analyticsId ?? null);
+        trackFormCompletion('checkout', company?.googleAnalyticsId ?? null);
       }
 
       toast.success("Order completed successfully!", {
@@ -254,13 +256,13 @@ function App() {
   useEffect(() => {
     const handleBeforeUnload = () => {
       if (!isOrderComplete && analyticsEnabled) {
-        trackFormAbandonment('checkout', currentStep + 1, steps.length, company?.analyticsId ?? null);
+        trackFormAbandonment('checkout', currentStep + 1, steps.length, company?.googleAnalyticsId ?? null);
       }
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [currentStep, isOrderComplete, analyticsEnabled, company?.analyticsId]);
+  }, [currentStep, isOrderComplete, analyticsEnabled, company?.googleAnalyticsId]);
 
   const renderStep = () => {
     if (showingSummary) {
