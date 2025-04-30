@@ -30,6 +30,7 @@ interface ShippingMethod {
   carrier: string;
   method: string;
   price: string;
+  deliveryTimeframe: string;
 }
 
 interface OrderSummaryProps {
@@ -281,13 +282,15 @@ export function OrderSummary({
                       }`}
                     />
                     <div>
-                      <p className="font-medium capitalize">
-                        {method.carrier} - {method.method.replace(/_/g, " ")}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {Number(method.price) === 0 ? "Free" : `$${Number(method.price).toFixed(2)}`}
+                      <p className="font-medium">
+                        {method.carrier.toUpperCase()} - {method.deliveryTimeframe}
                       </p>
                     </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-medium">
+                      {Number(method.price) === 0 ? "Free" : `$${Number(method.price).toFixed(2)}`}
+                    </p>
                   </div>
                 </div>
               ))}
