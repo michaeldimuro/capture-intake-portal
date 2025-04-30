@@ -341,11 +341,11 @@ export function OrderSummary({
                 <li>
                   Your subscription will automatically renew every{" "}
                   {product.monthSupply} {monthText} at $
-                  {Number(product.price).toFixed(2)}.
+                  {Number(product.price).toFixed(2)} + shipping.
                 </li>
                 <li>
                   You will be billed ${Number(product.price).toFixed(2)}{" "}
-                  today and every {product.monthSupply} {monthText} up
+                  + shipping today and every {product.monthSupply} {monthText} up
                   to 12 months unless cancelled.
                 </li>
                 <li>
@@ -355,7 +355,7 @@ export function OrderSummary({
                   .
                 </li>
                 <li>
-                Your order will be shipped to arrive within 3-5 business days after physician approval. You will receive an email once your prescription is approved and the order is being processed.
+                Your order will be shipped after physician approval. You will receive an email once your prescription is approved and the order is being processed.
                 </li>
               </ul>
             </div>
