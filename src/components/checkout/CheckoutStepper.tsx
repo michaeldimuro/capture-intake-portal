@@ -1,6 +1,6 @@
 import { useTrackInteraction } from '@/hooks/useTrackInteraction';
 import { cn } from '@/lib/utils';
-import { Check } from 'lucide-react';
+import { Check } from 'lucide-react'; 
 
 interface Step {
   title: string;
