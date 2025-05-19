@@ -110,6 +110,21 @@ export function Questionnaire({ onSubmit, questions }: QuestionnaireProps) {
   const handleAnswer = (questionId: string, value: any) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
     
+    // Check form validity immediately after answer changes
+    const unansweredRequired = visibleQuestions.filter(q => 
+      !q.isOptional && !(value === '' ? false : value) && q.partnerQuestionnaireQuestionId === questionId
+    );
+    
+    if (unansweredRequired.length > 0) {
+      setIsFormValid(false);
+    } else {
+      // Check all required questions
+      const allRequiredAnswered = visibleQuestions.every(q => 
+        q.isOptional || answers[q.partnerQuestionnaireQuestionId]
+      );
+      setIsFormValid(allRequiredAnswered);
+    }
+    
     // Scroll to the next question after a short delay
     setTimeout(() => {
       const nextQuestion = document.querySelector(`[data-question-id="${questionId}"]`)?.nextElementSibling;
