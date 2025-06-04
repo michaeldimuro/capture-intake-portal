@@ -10,7 +10,13 @@ import { ErrorPage } from "@/components/error-page";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Product, Question } from "./lib/types";
-import { useAnalytics, trackFormProgress, trackFormCompletion, trackFormAbandonment } from "@/lib/analytics";
+import { 
+  useAnalytics, 
+  trackFormProgress, 
+  trackFormCompletion, 
+  trackFormAbandonment
+} from "@/lib/analytics";
+import { usePurchaseTracking } from "@/hooks/useTrackInteraction";
 
 const steps = [
   {
@@ -99,6 +105,14 @@ function App() {
   // Initialize analytics with the company's GA measurement ID (which might be null)
   const { isEnabled: analyticsEnabled } = useAnalytics({ measurementId: company?.googleAnalyticsId ?? null });
 
+  // Initialize purchase tracking
+  const {
+    trackCheckoutStart,
+    trackAddPayment,
+    trackAddShipping,
+    trackCompletePurchase
+  } = usePurchaseTracking(company?.googleAnalyticsId ?? null, company?.name);
+
   console.log("DEBUG >> isAnalyticsEnabled: ", analyticsEnabled);
 
   // Track form progress when step changes
@@ -108,11 +122,26 @@ function App() {
     }
   }, [currentStep, showingSummary, analyticsEnabled, company?.googleAnalyticsId]);
 
+  // Track begin_checkout when user starts the checkout process
+  useEffect(() => {
+    if (product && analyticsEnabled && currentStep === 0) {
+      trackCheckoutStart(product);
+    }
+  }, [product, analyticsEnabled, currentStep, trackCheckoutStart]);
+
   useEffect(() => {
     if (shippingMethods.length === 1) {
       setSelectedShippingMethod(shippingMethods[0]);
     }
   }, [shippingMethods]);
+
+  // Track shipping info when shipping method is selected
+  useEffect(() => {
+    if (selectedShippingMethod && analyticsEnabled && product) {
+      const totalValue = Number(product.price) + Number(selectedShippingMethod.price);
+      trackAddShipping(totalValue, selectedShippingMethod);
+    }
+  }, [selectedShippingMethod, analyticsEnabled, product, trackAddShipping]);
 
   const fetchConfig = async (sessionKey: string) => {
     try {
@@ -181,6 +210,16 @@ function App() {
 
   const handlePaymentSubmit = (data: any) => {
     setFormData((prev) => ({ ...prev, payment: data }));
+    
+    // Track add_payment_info event
+    if (analyticsEnabled && product) {
+      const totalValue = selectedShippingMethod 
+        ? Number(product.price) + Number(selectedShippingMethod.price)
+        : Number(product.price);
+      
+      trackAddPayment(totalValue);
+    }
+    
     setCurrentStep(2);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -232,8 +271,13 @@ function App() {
         throw new Error('Failed to submit order');
       }
 
+      const responseData = await response.json();
+      
       setIsOrderComplete(true);
-      if (analyticsEnabled) {
+      
+      // Track purchase completion
+      if (analyticsEnabled && product) {
+        trackCompletePurchase(product, selectedShippingMethod, responseData.orderId);
         trackFormCompletion('checkout', company?.googleAnalyticsId ?? null);
       }
 
